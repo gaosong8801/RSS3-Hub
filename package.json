@@ -23,13 +23,19 @@
   },
   "homepage": "https://github.com/NaturalSelectionLabs/RSS3-Hub#readme",
   "dependencies": {
+    "@koa/router": "10.0.0",
     "koa": "2.13.1",
+    "koa-body": "4.2.0",
+    "object-hash": "2.1.1",
+    "secp256k1": "4.0.2",
     "winston": "3.3.3"
   },
   "devDependencies": {
     "@types/koa": "2.13.1",
     "@types/koa__router": "8.0.4",
     "@types/node": "15.0.2",
+    "@types/object-hash": "2.1.0",
+    "@types/secp256k1": "4.0.2",
     "concurrently": "6.1.0",
     "nodemon": "2.0.7",
     "typescript": "4.2.4"
