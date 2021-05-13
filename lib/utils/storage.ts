@@ -6,12 +6,12 @@ if (config.storage.type === 'local' && !fs.existsSync(config.storage.path)) {
 }
 
 export default {
-    set: (name: string, content: string) => {
+    write: (name: string, content: string) => {
         if (config.storage.type === 'local') {
             fs.writeFileSync(config.storage.path + name, content);
         }
     },
-    get: (name: string) => {
+    read: (name: string) => {
         if (config.storage.type === 'local') {
             return fs.readFileSync(config.storage.path + name, 'utf-8');
         }
@@ -19,6 +19,11 @@ export default {
     exist: (name: string) => {
         if (config.storage.type === 'local') {
             return fs.existsSync(config.storage.path + name);
+        }
+    },
+    rm: (name: string) => {
+        if (config.storage.type === 'local') {
+            fs.rmSync(config.storage.path + name);
         }
     }
 };

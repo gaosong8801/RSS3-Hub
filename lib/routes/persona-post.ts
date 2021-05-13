@@ -33,6 +33,6 @@ export default async (ctx: Koa.Context) => {
     }
 
     const content = JSON.stringify(persona);
-    storage.set(body.id, content);
+    storage.write(body.id, content);
     ctx.body = content;
 };

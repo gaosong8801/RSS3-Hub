@@ -13,7 +13,7 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const persona: RSS3Persona = JSON.parse(storage.get(pid));
+    const persona: RSS3Persona = JSON.parse(storage.read(pid));
 
     persona.profile = Object.assign(persona.profile, {
         name: body.name,
@@ -23,6 +23,6 @@ export default async (ctx: Koa.Context) => {
     persona.date_updated = new Date().toISOString();
 
     const content = JSON.stringify(persona);
-    storage.set(body.publicKey, content);
+    storage.write(pid, content);
     ctx.body = content;
 };

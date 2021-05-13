@@ -49,7 +49,7 @@ Exclusive body parameters
 | avatar | true     |
 | bio    | true     |
 
-- PATCH `/personas/:pid`
+- PATCH `/personas/:pid` - change a persona
 
 | Name   | Optional |
 | ------ | -------- |
@@ -57,7 +57,7 @@ Exclusive body parameters
 | avatar | true     |
 | bio    | true     |
 
-- DELETE `/personas/:pid`
+- DELETE `/personas/:pid` - delete a persona
 
 ### Items
 

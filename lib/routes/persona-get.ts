@@ -12,5 +12,5 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    ctx.body = storage.get(pid);
+    ctx.body = storage.read(pid);
 };
