@@ -13,7 +13,7 @@ export default {
     },
     get: (name: string) => {
         if (config.storage.type === 'local') {
-            return fs.readFileSync(config.storage.path + name);
+            return fs.readFileSync(config.storage.path + name, 'utf-8');
         }
     },
     exist: (name: string) => {
