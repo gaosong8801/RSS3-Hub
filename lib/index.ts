@@ -6,6 +6,7 @@ import Auth from './middleware/auth';
 import Header from './middleware/header';
 
 import PersonaPost from './routes/persona-post';
+import PersonaGet from './routes/persona-get';
 
 const app = new Koa();
 
@@ -19,6 +20,7 @@ app.use(Header);
 const router = new Router();
 
 router.post('/personas', PersonaPost);
+router.get('/personas/:pid', PersonaGet);
 
 app.use(router.routes()).use(router.allowedMethods());
 
