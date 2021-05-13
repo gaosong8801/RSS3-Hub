@@ -4,13 +4,11 @@ A centralized implementation of [RSS3](https://github.com/NaturalSelectionLabs/R
 
 ## API
 
-All request bodies should use the application/x-www-form-urlencoded content type
+All request bodies should be the application/x-www-form-urlencoded content type
 
 ### Authorization
 
-Authentication is required for all requests except GET method, which are authenticated by the `publicKey` and `sign` parameters in the request body
-
-`publicKey` is persona's public key
+Authentication is required for all requests except GET method, which are authenticated by the `sign` parameter in the request body
 
 `sign` is is calculated from request path, request body and persona's private key: sign `md5(requestPath + requestBody)` with persona's private key, then put the result as `sign` parameter to the end of the request body
 
@@ -42,15 +40,22 @@ When creating new persona, there is no public key and private key, so the client
 
 - POST `/personas` - add a new persona
 
-Body
+Exclusive body parameters
 
-| Name   | Optional | Type   | Description           |
-| ------ | -------- | ------ | --------------------- |
-| name   | true     | string | Name of new persona   |
-| avatar | true     | string | Avatar of new persona |
-| bio    | true     | string | Bio of new persona    |
+| Name   | Optional |
+| ------ | -------- |
+| id     | false    |
+| name   | true     |
+| avatar | true     |
+| bio    | true     |
 
 - PATCH `/personas/:pid`
+
+| Name   | Optional |
+| ------ | -------- |
+| name   | true     |
+| avatar | true     |
+| bio    | true     |
 
 - DELETE `/personas/:pid`
 

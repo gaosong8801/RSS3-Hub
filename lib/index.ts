@@ -13,13 +13,12 @@ const app = new Koa();
 app.use(KoaBody({
     includeUnparsed: true,
 }));
-app.use(Auth);
 app.use(Header);
 
 // router
 const router = new Router();
 
-router.post('/personas', PersonaPost);
+router.post('/personas', Auth, PersonaPost);
 router.get('/personas/:pid', PersonaGet);
 
 app.use(router.routes()).use(router.allowedMethods());
