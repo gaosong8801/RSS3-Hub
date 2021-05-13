@@ -4,30 +4,38 @@ A centralized implementation of [RSS3](https://github.com/NaturalSelectionLabs/R
 
 ## API
 
-### Persona
+### Personas
 
-- GET `/persona/get/:id` - get a persona
+- GET `/personas` - get all personas
 
-- POST `/persona/add` - add a new persona
+- GET `/personas/:pid` - get a persona
 
-- POST `/persona/set`
+- POST `/personas` - add a new persona
 
-- POST `/persona/del`
+- PATCH `/personas/:pid`
+
+- DELETE `/personas/:pid`
 
 ### Items
 
-- GET `/items/get/:id`
+- GET `/personas/:pid/items`
 
-- POST `/items/add`
+?page=
 
-- POST `/items/set`
+- POST `/personas/:pid/items`
 
-- POST `/items/del`
+- PATCH `/personas/:pid/items/:tid`
 
-## Link
+?page=
 
-- GET `/link/get/:id`
+- DELETE `/personas/:pid/items/:tid`
 
-- POST `/link/add`
+?page=
 
-- POST `/link/del`
+## Links
+
+- POST `/personas/:pid/links`
+
+- PATCH `/personas/:pid/links/:lid`
+
+- DELETE `/personas/:pid/links/:lid`
