@@ -41,13 +41,9 @@
     <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
     <script>
         function Hex2Uint8Array(hex) {
-            var integers = hex.match(/[\dA-F]{2}/gi).map(function(s) {
-                return parseInt(s, 16);
-            });
-            
+            const integers = hex.match(/[\dA-F]{2}/gi).map((s) => parseInt(s, 16));
             return new Uint8Array(integers);
         }
-        let i = 0;
         function Uint8Array2Hex(u8a) {
             return [...new Uint8Array(u8a.buffer)].map(x => x.toString(16).padStart(2, '0')).join('');
         }
