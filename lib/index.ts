@@ -8,11 +8,13 @@ import Header from './middleware/header';
 import PersonaPost from './routes/persona-post';
 import PersonaGet from './routes/persona-get';
 import PersonaPatch from './routes/persona-patch';
+import PersonaDelete from './routes/persona-delete';
 
 const app = new Koa();
 
 app.use(KoaBody({
     includeUnparsed: true,
+    parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
 }));
 app.use(Header);
 
@@ -22,6 +24,7 @@ const router = new Router();
 router.post('/personas', Auth, PersonaPost);
 router.get('/personas/:pid', PersonaGet);
 router.patch('/personas/:pid', Auth, PersonaPatch);
+router.delete('/personas/:pid', Auth, PersonaDelete);
 
 app.use(router.routes()).use(router.allowedMethods());
 

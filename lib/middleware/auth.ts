@@ -9,7 +9,7 @@ export default async (ctx: Koa.Context, next: Koa.Next) => {
         const publicKey = ctx.params?.pid || ctx.request.body.id;
 
         if (ctx.request.body[unparsed] && ctx.request.body.sign && publicKey) {
-            const body = ctx.request.body[unparsed]?.replace(/&sign=(.*)$/, '');
+            const body = ctx.request.body[unparsed]?.replace(/(&|^)sign=(.*)$/, '');
             const signOrigin = hash(ctx.path + body, {
                 algorithm: 'md5',
             });
