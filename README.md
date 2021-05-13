@@ -4,6 +4,8 @@ A centralized implementation of [RSS3](https://github.com/NaturalSelectionLabs/R
 
 ## API
 
+All request bodies should use the application/x-www-form-urlencoded content type
+
 ### Authorization
 
 Authentication is required for all requests except GET method, which are authenticated by the `publicKey` and `sign` parameters in the request body
@@ -35,8 +37,6 @@ function getSignature() {
 When creating new persona, there is no public key and private key, so the client needs to generate a pair of them, refer to [here](https://github.com/cryptocoinjs/secp256k1-node#private-key-generation-public-key-creation-signature-creation-signature-verification)
 
 ### Personas
-
-- GET `/personas` - get all personas
 
 - GET `/personas/:pid` - get a persona
 

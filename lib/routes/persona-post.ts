@@ -7,8 +7,9 @@ export default async (ctx: Koa.Context) => {
     if (storage.exist(body.publicKey)) {
         ctx.status = 406;
         ctx.body = {
-            error: 'File exists.'
+            error: 'Persona already exists.'
         };
+        return;
     }
     const nowDate = new Date().toISOString();
 
