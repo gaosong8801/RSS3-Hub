@@ -12,7 +12,20 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const content = storage.read(pid);
-    storage.rm(pid);
-    ctx.body = content;
+    let personaContent;
+    let fileName = pid;
+    do {
+        const content: RSS3Base = JSON.parse(storage.read(fileName));
+        storage.rm(fileName);
+        if (!personaContent) {
+            personaContent = content;
+        }
+        if (content.items_next) {
+            fileName = content.items_next;
+        } else {
+            fileName = null;
+        }
+    } while (fileName);
+
+    ctx.body = personaContent;
 };
