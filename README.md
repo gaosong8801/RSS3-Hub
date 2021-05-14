@@ -40,7 +40,7 @@ When creating new persona, there is no public key and private key, so the client
 
 - POST `/personas` - add a new persona
 
-Exclusive body parameters
+Body parameters
 
 | Name   | Optional |
 | ------ | -------- |
@@ -50,6 +50,8 @@ Exclusive body parameters
 | bio    | true     |
 
 - PATCH `/personas/:pid` - change a persona
+
+Body parameters
 
 | Name   | Optional |
 | ------ | -------- |
@@ -61,24 +63,36 @@ Exclusive body parameters
 
 ### Items
 
-- GET `/personas/:pid/items`
+- GET `/personas/:pid/items` - get items of a persona
 
-?page=
+Url parameters
 
-- POST `/personas/:pid/items`
+| Name | Optional | Description |
+| ---- | -------- | ----------- |
+| id   | true     | file id of items file, empty for returning the data from the persona file |
 
-- PATCH `/personas/:pid/items/:tid`
+- POST `/personas/:pid/items` - add a item to a persona
 
-?page=
+- PATCH `/personas/:pid/items/:tid` - change a item of a persona
 
-- DELETE `/personas/:pid/items/:tid`
+Url parameters
 
-?page=
+| Name | Optional | Description |
+| ---- | -------- | ----------- |
+| id   | true     | file id of items file, filling in to speed up search process, empty to search it from the persona file |
 
-## Links
+- DELETE `/personas/:pid/items/:tid` - delete a item of a persona
 
-- POST `/personas/:pid/links`
+Url parameters
 
-- PATCH `/personas/:pid/links/:lid`
+| Name | Optional | Description |
+| ---- | -------- | ----------- |
+| id   | true     | Same as PATCH |
 
-- DELETE `/personas/:pid/links/:lid`
+### Links
+
+- POST `/personas/:pid/links` - add a link to a persona
+
+- PATCH `/personas/:pid/links/:lid` - change a link of a persona
+
+- DELETE `/personas/:pid/links/:lid` - delete a link of a persona
