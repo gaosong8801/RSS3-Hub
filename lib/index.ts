@@ -19,7 +19,7 @@ import ItemsDelete from './routes/items-delete';
 
 import LinksPost from './routes/links-post';
 import LinksPatch from './routes/links-patch';
-// import LinksDelete from './routes/links-delete';
+import LinksDelete from './routes/links-delete';
 
 process.on('uncaughtException', (e) => {
     logger.error('uncaughtException: ' + e);
@@ -48,7 +48,7 @@ router.delete('/personas/:pid/items/:tid', Auth, ItemsDelete);
 
 router.post('/personas/:pid/links', Auth, LinksPost);
 router.patch('/personas/:pid/links/:lid', Auth, LinksPatch);
-// router.delete('/personas/:pid/links/:lid', Auth, LinksDelete);
+router.delete('/personas/:pid/links/:lid', Auth, LinksDelete);
 
 app.use(router.routes()).use(router.allowedMethods());
 
