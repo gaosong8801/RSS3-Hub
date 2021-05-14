@@ -22,12 +22,7 @@ interface RSS3Persona extends RSS3Base {
 		tags?: string[];
     };
 
-    links: {
-        id: string;
-        name: string;
-        tags?: string[];
-        list: Address[];
-    }[];
+    links: RSS3Link[];
 
     items: RSS3Item[];
 
@@ -64,4 +59,11 @@ interface RSS3Item {
     date_modified?: string;
 
     contents?: RSS3ItemContents[];
+}
+
+interface RSS3Link {
+    id: string;
+    name: string;
+    tags?: string[];
+    list: Address[];
 }

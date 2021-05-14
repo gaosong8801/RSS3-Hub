@@ -113,6 +113,22 @@ Url parameters
 
 - POST `/personas/:pid/links` - add a link to a persona
 
+Body parameters
+
+| Name     | Optional |
+| -------- | -------- |
+| name     | true     |
+| tags     | true     |
+| list     | true     |
+
 - PATCH `/personas/:pid/links/:lid` - change a link of a persona
+
+Body parameters
+
+| Name     | Optional |
+| -------- | -------- |
+| name     | true     |
+| tags     | true     |
+| list     | true     |
 
 - DELETE `/personas/:pid/links/:lid` - delete a link of a persona

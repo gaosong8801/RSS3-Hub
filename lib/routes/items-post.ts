@@ -1,8 +1,7 @@
 import type Koa from 'koa';
 import storage from '../utils/storage';
-import { is } from 'typescript-is';
 import config from '../config';
-import itemsBodyVerification from './items-body-verification';
+import itemsVerification from './verifications/items';
 
 export default async (ctx: Koa.Context) => {
     const pid = ctx.params.pid;
@@ -17,7 +16,7 @@ export default async (ctx: Koa.Context) => {
     }
     const nowDate = new Date().toISOString();
 
-    const verification = itemsBodyVerification(body);
+    const verification = itemsVerification(body);
     if (verification.error) {
         ctx.status = 400;
         ctx.body = {

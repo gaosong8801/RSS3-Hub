@@ -1,9 +1,7 @@
 import type Koa from 'koa';
 import storage from '../utils/storage';
-import itemsBodyVerification from './items-body-verification';
 
 export default async (ctx: Koa.Context) => {
-    const body = ctx.request.body;
     let id = ctx.query.id || ctx.params.pid;
     const tid = ctx.params.tid;
 

@@ -1,6 +1,6 @@
 import type Koa from 'koa';
 import storage from '../utils/storage';
-import itemsBodyVerification from './items-body-verification';
+import itemsVerification from './verifications/items';
 
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
@@ -15,7 +15,7 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const verification = itemsBodyVerification(body);
+    const verification = itemsVerification(body);
     if (verification.error) {
         ctx.status = 400;
         ctx.body = {

@@ -5,7 +5,7 @@ export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
 
     if (storage.exist(body.id)) {
-        ctx.status = 406;
+        ctx.status = 400;
         ctx.body = {
             error: 'Persona already exists.'
         };
