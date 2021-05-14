@@ -4,8 +4,6 @@ A centralized implementation of [RSS3](https://github.com/NaturalSelectionLabs/R
 
 ## API
 
-All request bodies should be the application/x-www-form-urlencoded content type
-
 ### Authorization
 
 Authentication is required for all requests except GET method, which are authenticated by the `sign` parameter in the request header
