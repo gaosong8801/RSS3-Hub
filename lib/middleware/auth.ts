@@ -8,13 +8,12 @@ export default async (ctx: Koa.Context, next: Koa.Next) => {
     if (ctx.method !== 'GET') {
         const publicKey = ctx.params?.pid || ctx.request.body.id;
 
-        if (ctx.request.body[unparsed] && ctx.request.body.sign && publicKey) {
-            const body = ctx.request.body[unparsed]?.replace(/(&|^)sign=(.*)$/, '');
-            const signOrigin = hash(ctx.path + body, {
+        if (ctx.request.body[unparsed] && ctx.headers.signature && publicKey) {
+            const signOrigin = hash(ctx.path + ctx.request.body[unparsed], {
                 algorithm: 'md5',
             });
             // console.log(signOrigin);
-            const verification = secp256k1.ecdsaVerify(Buffer.from(ctx.request.body.sign, 'hex'), Buffer.from(signOrigin), Buffer.from(publicKey, 'hex'));
+            const verification = secp256k1.ecdsaVerify(Buffer.from(<string>ctx.headers.signature, 'hex'), Buffer.from(signOrigin), Buffer.from(publicKey, 'hex'));
             if (!verification) {
                 ctx.status = 401;
                 ctx.body = {

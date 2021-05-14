@@ -8,9 +8,9 @@ All request bodies should be the application/x-www-form-urlencoded content type
 
 ### Authorization
 
-Authentication is required for all requests except GET method, which are authenticated by the `sign` parameter in the request body
+Authentication is required for all requests except GET method, which are authenticated by the `sign` parameter in the request header
 
-`sign` is is calculated from request path, request body and persona's private key: sign `md5(requestPath + requestBody)` with persona's private key, then put the result as `sign` parameter to the end of the request body
+`sign` is is calculated from request path, request body and persona's private key: sign `md5(requestPath + requestBody)` with persona's private key, then put the result as `signature` parameter to the the request header
 
 ```js
 import secp256k1 from 'secp256k1';
