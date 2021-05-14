@@ -15,15 +15,6 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const verification = itemsBodyVerification(body);
-    if (verification.error) {
-        ctx.status = 400;
-        ctx.body = {
-            error: `Bad Request. Parameter ${verification.error}not legal.`
-        };
-        return;
-    }
-
     let index;
     let content: RSS3Base;
     do {
@@ -43,17 +34,14 @@ export default async (ctx: Koa.Context) => {
     } while (index === -1 && id);
 
     if (index !== -1) {
-        const patch: any = {
-            authors: verification.authors,
-            title: body.title,
-            summary: body.summary,
-            tags: verification.tags,
+        content.items[index] = Object.assign(content.items[index], {
+            authors: undefined,
+            title: undefined,
+            summary: undefined,
+            tags: undefined,
             date_modified: new Date().toISOString(),
-            contents: verification.contents,
-        };
-        Object.keys(patch).forEach(key => patch[key] === undefined && delete patch[key]);
-
-        content.items[index] = Object.assign(content.items[index], patch);
+            contents: undefined,
+        });
 
         storage.write(id, JSON.stringify(content));
         ctx.body = content.items[index];
