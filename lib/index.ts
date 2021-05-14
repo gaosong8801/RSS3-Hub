@@ -5,12 +5,19 @@ import KoaBody from 'koa-body';
 import Auth from './middleware/auth';
 import Header from './middleware/header';
 
+import logger from './utils/logger';
+
 import PersonaPost from './routes/persona-post';
 import PersonaGet from './routes/persona-get';
 import PersonaPatch from './routes/persona-patch';
 import PersonaDelete from './routes/persona-delete';
 
 import ItemsGet from './routes/items-get';
+import ItemsPost from './routes/items-post';
+
+process.on('uncaughtException', (e) => {
+    logger.error('uncaughtException: ' + e);
+});
 
 const app = new Koa();
 
@@ -29,6 +36,7 @@ router.patch('/personas/:pid', Auth, PersonaPatch);
 router.delete('/personas/:pid', Auth, PersonaDelete);
 
 router.get('/personas/:pid/items', Auth, ItemsGet);
+router.post('/personas/:pid/items', Auth, ItemsPost);
 
 app.use(router.routes()).use(router.allowedMethods());
 

@@ -67,26 +67,46 @@ Body parameters
 
 Url parameters
 
-| Name | Optional | Description |
-| ---- | -------- | ----------- |
+| Name | Optional | Description                                                               |
+| ---- | -------- | ------------------------------------------------------------------------- |
 | id   | true     | file id of items file, empty for returning the data from the persona file |
 
 - POST `/personas/:pid/items` - add a item to a persona
+
+Body parameters
+
+| Name     | Optional | Description        |
+| -------- | -------- | ------------------ |
+| authors  | true     | Default to `[pid]` |
+| title    | true     |                    |
+| summary  | true     |                    |
+| tags     | true     |                    |
+| contents | true     |                    |
 
 - PATCH `/personas/:pid/items/:tid` - change a item of a persona
 
 Url parameters
 
-| Name | Optional | Description |
-| ---- | -------- | ----------- |
+| Name | Optional | Description                                                                                            |
+| ---- | -------- | ------------------------------------------------------------------------------------------------------ |
 | id   | true     | file id of items file, filling in to speed up search process, empty to search it from the persona file |
+
+Body parameters
+
+| Name     | Optional |
+| -------- | -------- |
+| authors  | true     |
+| title    | true     |
+| summary  | true     |
+| tags     | true     |
+| contents | true     |
 
 - DELETE `/personas/:pid/items/:tid` - delete a item of a persona
 
 Url parameters
 
-| Name | Optional | Description |
-| ---- | -------- | ----------- |
+| Name | Optional | Description   |
+| ---- | -------- | ------------- |
 | id   | true     | Same as PATCH |
 
 ### Links

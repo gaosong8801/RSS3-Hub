@@ -45,6 +45,15 @@ interface RSS3Items extends RSS3Base {
     items: RSS3Item[];
 }
 
+interface RSS3ItemContents {
+    id: Address; // Link to a third party file
+    mime_type: string;
+    name?: string;
+    tags?: string[];
+    size_in_bytes?: string;
+    duration_in_seconds?: string;
+}
+
 interface RSS3Item {
     id: string;
     authors?: Address[];
@@ -54,12 +63,5 @@ interface RSS3Item {
     date_published?: string;
     date_modified?: string;
 
-    contents?: {
-        id: Address; // Link to a third party file
-        mime_type: string;
-        name?: string;
-        tags?: string[];
-        size_in_bytes?: string;
-        duration_in_seconds?: string;
-    }[];
+    contents?: RSS3ItemContents[];
 }
