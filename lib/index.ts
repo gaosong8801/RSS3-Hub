@@ -10,6 +10,8 @@ import PersonaGet from './routes/persona-get';
 import PersonaPatch from './routes/persona-patch';
 import PersonaDelete from './routes/persona-delete';
 
+import ItemsGet from './routes/items-get';
+
 const app = new Koa();
 
 app.use(KoaBody({
@@ -25,6 +27,8 @@ router.post('/personas', Auth, PersonaPost);
 router.get('/personas/:pid', PersonaGet);
 router.patch('/personas/:pid', Auth, PersonaPatch);
 router.delete('/personas/:pid', Auth, PersonaDelete);
+
+router.get('/personas/:pid/items', Auth, ItemsGet);
 
 app.use(router.routes()).use(router.allowedMethods());
 

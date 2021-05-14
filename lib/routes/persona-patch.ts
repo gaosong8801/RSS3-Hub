@@ -8,7 +8,7 @@ export default async (ctx: Koa.Context) => {
     if (!storage.exist(pid)) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found'
+            error: 'Not Found.'
         };
         return;
     }
