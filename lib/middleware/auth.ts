@@ -13,7 +13,10 @@ export default async (ctx: Koa.Context, next: Koa.Next) => {
                 algorithm: 'md5',
             });
             // console.log(signOrigin);
-            const verification = secp256k1.ecdsaVerify(Buffer.from(<string>ctx.headers.signature, 'hex'), Buffer.from(signOrigin), Buffer.from(publicKey, 'hex'));
+            let verification;
+            try {
+                verification = secp256k1.ecdsaVerify(Buffer.from(<string>ctx.headers.signature, 'hex'), Buffer.from(signOrigin), Buffer.from(publicKey, 'hex'));
+            } catch (error) {}
             if (!verification) {
                 ctx.status = 401;
                 ctx.body = {
