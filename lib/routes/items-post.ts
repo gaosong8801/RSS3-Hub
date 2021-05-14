@@ -2,6 +2,7 @@ import type Koa from 'koa';
 import storage from '../utils/storage';
 import { is } from 'typescript-is';
 import config from '../config';
+import itemsBodyVerification from './items-body-verification';
 
 export default async (ctx: Koa.Context) => {
     const pid = ctx.params.pid;
@@ -16,53 +17,12 @@ export default async (ctx: Koa.Context) => {
     }
     const nowDate = new Date().toISOString();
 
-    // verify parameters
-    let error = false;
-    const reject = (parameter: string) => {
+    const verification = itemsBodyVerification(body);
+    if (verification.error) {
         ctx.status = 400;
         ctx.body = {
-            error: `Bad Request. Parameter ${parameter} not legal.`
+            error: `Bad Request. Parameter ${verification.error}not legal.`
         };
-        error = true;
-    };
-
-    let authors: Address[];
-    try {
-        if (body.authors) {
-            authors = JSON.parse(body.authors);
-            if (!is<Address[]>(authors)) {
-                throw new Error();
-            }
-        }
-    } catch (error) {
-        reject('authors');
-    }
-
-    let tags: string[];
-    try {
-        if (body.tags) {
-            tags = JSON.parse(body.tags);
-            if (!is<string[]>(tags)) {
-                throw new Error();
-            }
-        }
-    } catch (error) {
-        reject('tags');
-    }
-
-    let contents: RSS3ItemContents[];
-    try {
-        if (body.contents) {
-            contents = JSON.parse(body.contents);
-            if (!is<RSS3ItemContents[]>(contents)) {
-                throw new Error();
-            }
-        }
-    } catch (error) {
-        reject('contents');
-    }
-
-    if (error) {
         return;
     }
 
@@ -71,13 +31,13 @@ export default async (ctx: Koa.Context) => {
     const id = persona.items[0] ? parseInt(persona.items[0].id.split('-')[2]) + 1 : 0;
     const item: RSS3Item = {
         id: `${pid}-item-${id}`,
-        authors: authors || [pid],
+        authors: verification.authors || [pid],
         title: body.title,
         summary: body.summary,
-        tags: tags,
+        tags: verification.tags,
         date_published: nowDate,
         date_modified: nowDate,
-        contents: contents,
+        contents: verification.contents,
     }
 
     persona.items.unshift(item);

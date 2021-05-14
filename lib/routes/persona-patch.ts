@@ -15,11 +15,14 @@ export default async (ctx: Koa.Context) => {
 
     const persona: RSS3Persona = JSON.parse(storage.read(pid));
 
-    persona.profile = Object.assign(persona.profile, {
+    const patch: any = {
         name: body.name,
         avatar: body.avatar,
         bio: body.bio,
-    });
+    };
+    Object.keys(patch).forEach(key => patch[key] === undefined && delete patch[key])
+
+    persona.profile = Object.assign(persona.profile, patch);
     persona.date_updated = new Date().toISOString();
 
     const content = JSON.stringify(persona);

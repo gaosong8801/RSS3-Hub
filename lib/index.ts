@@ -14,6 +14,7 @@ import PersonaDelete from './routes/persona-delete';
 
 import ItemsGet from './routes/items-get';
 import ItemsPost from './routes/items-post';
+import ItemsPatch from './routes/items-patch';
 
 process.on('uncaughtException', (e) => {
     logger.error('uncaughtException: ' + e);
@@ -37,6 +38,7 @@ router.delete('/personas/:pid', Auth, PersonaDelete);
 
 router.get('/personas/:pid/items', Auth, ItemsGet);
 router.post('/personas/:pid/items', Auth, ItemsPost);
+router.patch('/personas/:pid/items/:tid', Auth, ItemsPatch);
 
 app.use(router.routes()).use(router.allowedMethods());
 
