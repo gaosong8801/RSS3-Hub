@@ -3,10 +3,9 @@ import storage from '../utils/storage';
 import linksVerification from './verifications/links';
 
 export default async (ctx: Koa.Context) => {
-    const pid = ctx.params.pid;
     const body = ctx.request.body;
 
-    if (!storage.exist(pid)) {
+    if (!storage.exist(ctx.state.signer)) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.'
@@ -24,7 +23,7 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const persona: RSS3Persona = JSON.parse(storage.read(pid));
+    const persona: RSS3Persona = JSON.parse(storage.read(ctx.state.signer));
 
     const repeatingLink = persona.links.find((link) => link.name === body.name);
     if (repeatingLink) {
@@ -37,7 +36,7 @@ export default async (ctx: Koa.Context) => {
 
     const id = persona.links[0] ? parseInt(persona.links[0].id.split('-')[2]) + 1 : 0;
     const link: RSS3Link = {
-        id: `${pid}-link-${id}`,
+        id: `${ctx.state.signer}-link-${id}`,
         name: body.name,
         tags: verification.tags,
         list: verification.list,
@@ -46,7 +45,7 @@ export default async (ctx: Koa.Context) => {
     persona.links.unshift(link);
 
     persona.date_created = nowDate;
-    storage.write(pid, JSON.stringify(persona));
+    storage.write(ctx.state.signer, JSON.stringify(persona));
 
     ctx.body = link;
 };

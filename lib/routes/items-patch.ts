@@ -4,7 +4,7 @@ import itemsVerification from './verifications/items';
 
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
-    let id = ctx.query.id || ctx.params.pid;
+    let id = ctx.query.id || ctx.state.signer;
     const tid = ctx.params.tid;
 
     if (!storage.exist(id)) {

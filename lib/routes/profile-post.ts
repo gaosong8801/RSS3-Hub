@@ -4,7 +4,7 @@ import storage from '../utils/storage';
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
 
-    if (storage.exist(body.id)) {
+    if (storage.exist(ctx.state.signer)) {
         ctx.status = 400;
         ctx.body = {
             error: 'Persona already exists.'
@@ -14,7 +14,7 @@ export default async (ctx: Koa.Context) => {
     const nowDate = new Date().toISOString();
 
     const persona: RSS3Persona = {
-        id: body.id,
+        id: ctx.state.signer,
         version: 'rss3.io/version/v0.1.0',
         type: 'persona',
         date_created: nowDate,
@@ -33,6 +33,6 @@ export default async (ctx: Koa.Context) => {
     }
 
     const content = JSON.stringify(persona);
-    storage.write(body.id, content);
+    storage.write(ctx.state.signer, content);
     ctx.body = content;
 };

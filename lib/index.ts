@@ -7,12 +7,12 @@ import Header from './middleware/header';
 
 import logger from './utils/logger';
 
-import PersonaPost from './routes/persona-post';
-import PersonaGet from './routes/persona-get';
-import PersonaPatch from './routes/persona-patch';
-import PersonaDelete from './routes/persona-delete';
+import FileGet from './routes/file-get';
 
-import ItemsGet from './routes/items-get';
+import ProfilePost from './routes/profile-post';
+import ProfilePatch from './routes/profile-patch';
+import ProfileDelete from './routes/profile-delete';
+
 import ItemsPost from './routes/items-post';
 import ItemsPatch from './routes/items-patch';
 import ItemsDelete from './routes/items-delete';
@@ -36,19 +36,19 @@ app.use(Header);
 // router
 const router = new Router();
 
-router.post('/personas', Auth, PersonaPost);
-router.get('/personas/:pid', PersonaGet);
-router.patch('/personas/:pid', Auth, PersonaPatch);
-router.delete('/personas/:pid', Auth, PersonaDelete);
+router.get('/file/:fid', FileGet);
 
-router.get('/personas/:pid/items', ItemsGet);
-router.post('/personas/:pid/items', Auth, ItemsPost);
-router.patch('/personas/:pid/items/:tid', Auth, ItemsPatch);
-router.delete('/personas/:pid/items/:tid', Auth, ItemsDelete);
+router.post('/profile', Auth, ProfilePost);
+router.patch('/profile', Auth, ProfilePatch);
+router.delete('/profile', Auth, ProfileDelete);
 
-router.post('/personas/:pid/links', Auth, LinksPost);
-router.patch('/personas/:pid/links/:lid', Auth, LinksPatch);
-router.delete('/personas/:pid/links/:lid', Auth, LinksDelete);
+router.post('/items', Auth, ItemsPost);
+router.patch('/items/:tid', Auth, ItemsPatch);
+router.delete('/items/:tid', Auth, ItemsDelete);
+
+router.post('/links', Auth, LinksPost);
+router.patch('/links/:lid', Auth, LinksPatch);
+router.delete('/links/:lid', Auth, LinksDelete);
 
 app.use(router.routes()).use(router.allowedMethods());
 

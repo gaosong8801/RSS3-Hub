@@ -6,35 +6,24 @@ A centralized implementation of [RSS3](https://github.com/NaturalSelectionLabs/R
 
 ### Authorization
 
-Authentication is required for all requests except GET method, which are authenticated by the `sign` parameter in the request header
+Authentication is required for all requests except GET method, which are authenticated by the `signature` parameter in the request header
 
-`sign` is is calculated from request path, request body and persona's private key: sign `md5(requestPath + requestBody)` with persona's private key, then put the result as `signature` parameter to the the request header
+`signature` is is calculated from request path, request body and persona's private key: sign `keccak256(requestMethod + requestPath + requestBody)` with persona's private key, then put the result as `signature` parameter to the the request header
 
 ```js
-import secp256k1 from 'secp256k1';
-import hash from 'object-hash';
+import EthCrypto from 'eth-crypto';
 
-function Hex2Uint8Array(hex) {
-    const integers = hex.match(/[\dA-F]{2}/gi).map((s) => parseInt(s, 16));
-    return new Uint8Array(integers);
-}
-function Uint8Array2Hex(u8a) {
-    return [...new Uint8Array(u8a.buffer)].map(x => x.toString(16).padStart(2, '0')).join('');
-}
-function getSignature() {
-    const message = hash(requestPath + requestBody, {
-        algorithm: 'md5',
-    });
-    const sign = secp256k1.ecdsaSign((new TextEncoder()).encode(message), Hex2Uint8Array(privatekey));
-    return Uint8Array2Hex(sign.signature);
-}
+const message = ctx.method + ctx.path + ctx.request.body[unparsed];
+const signature = EthCrypto.sign(privateKey, EthCrypto.hash.keccak256(message));
 ```
 
-When creating new persona, there is no public key and private key, so the client needs to generate a pair of them, refer to [here](https://github.com/cryptocoinjs/secp256k1-node#private-key-generation-public-key-creation-signature-creation-signature-verification)
+When creating new persona, the client needs to generate an identity, refer to [here](https://github.com/pubkey/eth-crypto#createidentity)
+
+### Get
+
+- GET `/file/:fid` - get a file
 
 ### Personas
-
-- GET `/personas/:pid` - get a persona
 
 - POST `/personas` - add a new persona
 
@@ -42,12 +31,11 @@ Body parameters
 
 | Name   | Optional |
 | ------ | -------- |
-| id     | false    |
 | name   | true     |
 | avatar | true     |
 | bio    | true     |
 
-- PATCH `/personas/:pid` - change a persona
+- PATCH `/personas` - change a persona
 
 Body parameters
 
@@ -57,19 +45,11 @@ Body parameters
 | avatar | true     |
 | bio    | true     |
 
-- DELETE `/personas/:pid` - delete a persona
+- DELETE `/personas` - delete a persona
 
 ### Items
 
-- GET `/personas/:pid/items` - get items of a persona
-
-Url parameters
-
-| Name | Optional | Description                                                               |
-| ---- | -------- | ------------------------------------------------------------------------- |
-| id   | true     | file id of items file, empty for returning the data from the persona file |
-
-- POST `/personas/:pid/items` - add a item to a persona
+- POST `/items` - add a item to a persona
 
 Body parameters
 
@@ -81,7 +61,7 @@ Body parameters
 | tags     | true     |                    |
 | contents | true     |                    |
 
-- PATCH `/personas/:pid/items/:tid` - change a item of a persona
+- PATCH `/items/:tid` - change a item of a persona
 
 Url parameters
 
@@ -99,7 +79,7 @@ Body parameters
 | tags     | true     |
 | contents | true     |
 
-- DELETE `/personas/:pid/items/:tid` - delete a item of a persona
+- DELETE `/items/:tid` - delete a item of a persona
 
 Url parameters
 
@@ -109,7 +89,7 @@ Url parameters
 
 ### Links
 
-- POST `/personas/:pid/links` - add a link to a persona
+- POST `/links` - add a link to a persona
 
 Body parameters
 
@@ -119,7 +99,7 @@ Body parameters
 | tags     | true     |
 | list     | true     |
 
-- PATCH `/personas/:pid/links/:lid` - change a link of a persona
+- PATCH `/links/:lid` - change a link of a persona
 
 Body parameters
 
@@ -129,4 +109,4 @@ Body parameters
 | tags     | true     |
 | list     | true     |
 
-- DELETE `/personas/:pid/links/:lid` - delete a link of a persona
+- DELETE `/links/:lid` - delete a link of a persona

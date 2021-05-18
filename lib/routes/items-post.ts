@@ -4,10 +4,9 @@ import config from '../config';
 import itemsVerification from './verifications/items';
 
 export default async (ctx: Koa.Context) => {
-    const pid = ctx.params.pid;
     const body = ctx.request.body;
 
-    if (!storage.exist(pid)) {
+    if (!storage.exist(ctx.state.signer)) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.'
@@ -25,12 +24,12 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const persona: RSS3Persona = JSON.parse(storage.read(pid));
+    const persona: RSS3Persona = JSON.parse(storage.read(ctx.state.signer));
 
     const id = persona.items[0] ? parseInt(persona.items[0].id.split('-')[2]) + 1 : 0;
     const item: RSS3Item = {
-        id: `${pid}-item-${id}`,
-        authors: verification.authors || [pid],
+        id: `${ctx.state.signer}-item-${id}`,
+        authors: verification.authors || [ctx.state.signer],
         title: body.title,
         summary: body.summary,
         tags: verification.tags,
@@ -43,7 +42,7 @@ export default async (ctx: Koa.Context) => {
 
     if (persona.items.length > config.itemPageSize) {
         const newList = persona.items.slice(1);
-        const newID = pid + '-' + (persona.items_next ? parseInt(persona.items_next.split('-')[1]) + 1 : 1);
+        const newID = ctx.state.signer + '-' + (persona.items_next ? parseInt(persona.items_next.split('-')[1]) + 1 : 1);
         const newContent: RSS3Items = {
             id: body.id,
             version: 'rss3.io/version/v0.1.0',
@@ -61,7 +60,7 @@ export default async (ctx: Koa.Context) => {
     }
 
     persona.date_created = nowDate;
-    storage.write(pid, JSON.stringify(persona));
+    storage.write(ctx.state.signer, JSON.stringify(persona));
 
     ctx.body = item;
 };

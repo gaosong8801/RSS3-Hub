@@ -2,7 +2,7 @@ import type Koa from 'koa';
 import storage from '../utils/storage';
 
 export default async (ctx: Koa.Context) => {
-    let id = ctx.query.id || ctx.params.pid;
+    let id = ctx.query.id || ctx.state.signer;
     const tid = ctx.params.tid;
 
     if (!storage.exist(id)) {

@@ -1,0 +1,84 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EthCrypto</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            margin: 30px;
+        }
+        input {
+            width: 650px;
+        }
+        button {
+            margin-bottom: 20px;
+        }
+        .label {
+            display: inline-block;
+            width: 100px;
+        }
+        p {
+            word-break: break-all;
+        }
+    </style>
+</head>
+<body>
+    <div class="new">
+        <p><span class="label">Private Key:</span> <input type="text" class="privatekey" value="0x47e18d6c386898b424025cd9db446f779ef24ad33a26c499c87bb3d9372540ba"></p>
+        <p><span class="label">Public Key:</span> <input type="text" class="publickey" value="5bf7fa56e6f158c66a3c3761a9fa548593e942d0428ee4c7d5578ee44b9eeb144387d031c9bc47631048161bee4ae43e24581e5d308990af94858204d795b76f"></p>
+        <p><span class="label">Address:</span> <input type="text" class="address" value="0x6338ee94fB85e157D117d681E808a34a9aC21f31"></p>
+        <button type="button" class="btn btn-primary">New</button>
+    </div>
+    <div class="sign">
+        <p><span class="label">Private Key: </span><input type="text" class="privatekey" value="0x47e18d6c386898b424025cd9db446f779ef24ad33a26c499c87bb3d9372540ba"></p>
+        <p><span class="label">Message: </span><input type="text" class="message"></p>
+        <button type="button" class="btn btn-primary">Sign</button>
+    </div>
+    <div class="recover">
+        <p><span class="label">Signature: </span><input type="text" class="signature"></p>
+        <p><span class="label">Message: </span><input type="text" class="message"></p>
+        <button type="button" class="btn btn-primary">Recover</button>
+        <p><span class="label">Public Key:</span> <span class="result-publickey"></span></p>
+        <p><span class="label">Address:</span> <span class="result-address"></span></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./EthCrypto.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jquery"></script>
+    <script>
+        function Hex2Uint8Array(hex) {
+            const integers = hex.match(/[\dA-F]{2}/gi).map((s) => parseInt(s, 16));
+            return new Uint8Array(integers);
+        }
+        function Uint8Array2Hex(u8a) {
+            return [...new Uint8Array(u8a.buffer)].map(x => x.toString(16).padStart(2, '0')).join('');
+        }
+
+        const te = new TextEncoder();
+        const td = new TextDecoder();
+        $('.new button').on('click', () => {
+            const keys = EthCrypto.createIdentity();
+            $('.new .publickey').val(keys.publicKey);
+            $('.new .privatekey').val(keys.privateKey);
+            $('.new .address').val(keys.address);
+            $('.sign .privatekey').val(keys.privateKey);
+        });
+        $('.sign button').on('click', () => {
+            const privatekey = $('.sign .privatekey').val();
+            const message = $('.sign .message').val();
+            const signature = EthCrypto.sign(privatekey, EthCrypto.hash.keccak256(message));
+            $('.recover .message').val(message);
+            $('.recover .signature').val(signature);
+        });
+        $('.recover button').on('click', () => {
+            const publicKey = $('.recover .publicKey').val();
+            const signature = $('.recover .signature').val();
+            const message = $('.recover .message').val();
+            $('.recover .result-address').html(EthCrypto.recover(signature, EthCrypto.hash.keccak256(message)));
+            $('.recover .result-publickey').html(EthCrypto.recoverPublicKey(signature, EthCrypto.hash.keccak256(message)));
+        });
+    </script>
+</body>
+</html>

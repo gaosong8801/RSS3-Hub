@@ -3,9 +3,8 @@ import storage from '../utils/storage';
 
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
-    const pid = ctx.params.pid;
 
-    if (!storage.exist(pid)) {
+    if (!storage.exist(ctx.state.signer)) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.'
@@ -13,7 +12,7 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const persona: RSS3Persona = JSON.parse(storage.read(pid));
+    const persona: RSS3Persona = JSON.parse(storage.read(ctx.state.signer));
 
     const patch: any = {
         name: body.name,
@@ -26,6 +25,6 @@ export default async (ctx: Koa.Context) => {
     persona.date_updated = new Date().toISOString();
 
     const content = JSON.stringify(persona);
-    storage.write(pid, content);
+    storage.write(ctx.state.signer, content);
     ctx.body = content;
 };
