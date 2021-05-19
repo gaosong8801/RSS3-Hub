@@ -27,6 +27,13 @@ process.on('uncaughtException', (e) => {
 
 const app = new Koa();
 
+app.on('error', (err, ctx) => {
+    logger.error('server error', err, ctx);
+    ctx.body = {
+        error: 'Server error.',
+    }
+});
+
 app.use(KoaBody({
     includeUnparsed: true,
     parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
