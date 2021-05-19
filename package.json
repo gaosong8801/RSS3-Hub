@@ -1,44 +1,51 @@
 {
-  "name": "rss3-hub",
-  "version": "0.1.0",
-  "description": "",
-  "main": "lib/index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "watch-ts": "ttsc -w",
-    "watch-node": "nodemon dist/index.js",
-    "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
-    "dev": "npm run watch"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NaturalSelectionLabs/RSS3-Hub.git"
-  },
-  "keywords": [
-    "rss3"
-  ],
-  "author": "DIYgod",
-  "bugs": {
-    "url": "https://github.com/NaturalSelectionLabs/RSS3-Hub/issues"
-  },
-  "homepage": "https://github.com/NaturalSelectionLabs/RSS3-Hub#readme",
-  "dependencies": {
-    "@koa/router": "10.0.0",
-    "aws-sdk": "2.909.0",
-    "dotenv": "9.0.2",
-    "eth-crypto": "1.9.0",
-    "koa": "2.13.1",
-    "koa-body": "4.2.0",
-    "typescript-is": "0.18.2",
-    "winston": "3.3.3"
-  },
-  "devDependencies": {
-    "@types/koa": "2.13.1",
-    "@types/koa__router": "8.0.4",
-    "@types/node": "15.0.2",
-    "concurrently": "6.1.0",
-    "nodemon": "2.0.7",
-    "ttypescript": "1.5.12",
-    "typescript": "4.2.4"
-  }
+    "name": "rss3-hub",
+    "version": "0.1.0",
+    "description": "",
+    "main": "lib/index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "watch-ts": "ttsc -w",
+        "watch-node": "nodemon dist/index.js",
+        "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
+        "dev": "npm run watch",
+        "prepare": "husky install"
+    },
+    "lint-staged": {
+        "**/*": "prettier --write --ignore-unknown"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/NaturalSelectionLabs/RSS3-Hub.git"
+    },
+    "keywords": [
+        "rss3"
+    ],
+    "author": "DIYgod",
+    "bugs": {
+        "url": "https://github.com/NaturalSelectionLabs/RSS3-Hub/issues"
+    },
+    "homepage": "https://github.com/NaturalSelectionLabs/RSS3-Hub#readme",
+    "dependencies": {
+        "@koa/router": "10.0.0",
+        "aws-sdk": "2.909.0",
+        "dotenv": "9.0.2",
+        "eth-crypto": "1.9.0",
+        "koa": "2.13.1",
+        "koa-body": "4.2.0",
+        "typescript-is": "0.18.2",
+        "winston": "3.3.3"
+    },
+    "devDependencies": {
+        "@types/koa": "2.13.1",
+        "@types/koa__router": "8.0.4",
+        "@types/node": "15.0.2",
+        "concurrently": "6.1.0",
+        "husky": "^6.0.0",
+        "lint-staged": "11.0.0",
+        "nodemon": "2.0.7",
+        "prettier": "2.3.0",
+        "ttypescript": "1.5.12",
+        "typescript": "4.2.4"
+    }
 }
