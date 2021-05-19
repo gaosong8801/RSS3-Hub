@@ -7,7 +7,7 @@ export default async (ctx: Koa.Context) => {
     let id = ctx.query.id || ctx.state.signer;
     const tid = ctx.params.tid;
 
-    if (!storage.exist(id)) {
+    if (!await storage.exist(id)) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.'
@@ -27,7 +27,7 @@ export default async (ctx: Koa.Context) => {
     let index;
     let content: RSS3Base;
     do {
-        content = JSON.parse(storage.read(id));
+        content = JSON.parse(await storage.read(id));
         index = content.items.findIndex((item) => item.id === tid);
         if (index === -1) {
             if (content.items_next) {
@@ -55,7 +55,7 @@ export default async (ctx: Koa.Context) => {
 
         content.items[index] = Object.assign(content.items[index], patch);
 
-        storage.write(id, JSON.stringify(content));
+        await storage.write(id, JSON.stringify(content));
         ctx.body = content.items[index];
     }
 };

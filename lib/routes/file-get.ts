@@ -4,7 +4,7 @@ import storage from '../utils/storage';
 export default async (ctx: Koa.Context) => {
     const fid = ctx.params.fid;
 
-    if (!storage.exist(fid)) {
+    if (!await storage.exist(fid)) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.'
@@ -12,5 +12,5 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    ctx.body = storage.read(fid);
+    ctx.body = await storage.read(fid);
 };

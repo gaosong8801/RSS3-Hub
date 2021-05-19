@@ -4,7 +4,7 @@ import storage from '../utils/storage';
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
 
-    if (!storage.exist(ctx.state.signer)) {
+    if (!await storage.exist(ctx.state.signer)) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.'
@@ -12,7 +12,7 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const persona: RSS3Persona = JSON.parse(storage.read(ctx.state.signer));
+    const persona: RSS3Persona = JSON.parse(await storage.read(ctx.state.signer));
 
     const patch: any = {
         name: body.name,
@@ -25,6 +25,6 @@ export default async (ctx: Koa.Context) => {
     persona.date_updated = new Date().toISOString();
 
     const content = JSON.stringify(persona);
-    storage.write(ctx.state.signer, content);
+    await storage.write(ctx.state.signer, content);
     ctx.body = content;
 };
