@@ -11,4 +11,4 @@ export default {
         spacesSecret: process.env.SPACES_SECRET,
     },
     itemPageSize: 2,
-}
+};

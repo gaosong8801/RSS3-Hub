@@ -2,10 +2,10 @@ import type Koa from 'koa';
 import storage from '../utils/storage';
 
 export default async (ctx: Koa.Context) => {
-    if (!await storage.exist(ctx.state.signer)) {
+    if (!(await storage.exist(ctx.state.signer))) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found.'
+            error: 'Not Found.',
         };
         return;
     }

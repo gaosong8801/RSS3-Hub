@@ -7,10 +7,10 @@ export default async (ctx: Koa.Context) => {
     let id = ctx.query.id || ctx.state.signer;
     const tid = ctx.params.tid;
 
-    if (!await storage.exist(id)) {
+    if (!(await storage.exist(id))) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found.'
+            error: 'Not Found.',
         };
         return;
     }
@@ -19,7 +19,7 @@ export default async (ctx: Koa.Context) => {
     if (verification.error) {
         ctx.status = 400;
         ctx.body = {
-            error: `Bad Request. Parameter ${verification.error}not legal.`
+            error: `Bad Request. Parameter ${verification.error}not legal.`,
         };
         return;
     }
@@ -36,7 +36,7 @@ export default async (ctx: Koa.Context) => {
                 id = null;
                 ctx.status = 404;
                 ctx.body = {
-                    error: 'Not Found.'
+                    error: 'Not Found.',
                 };
             }
         }
@@ -51,7 +51,9 @@ export default async (ctx: Koa.Context) => {
             date_modified: new Date().toISOString(),
             contents: verification.contents,
         };
-        Object.keys(patch).forEach(key => patch[key] === undefined && delete patch[key]);
+        Object.keys(patch).forEach(
+            (key) => patch[key] === undefined && delete patch[key],
+        );
 
         content.items[index] = Object.assign(content.items[index], patch);
 

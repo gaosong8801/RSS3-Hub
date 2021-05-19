@@ -1,4 +1,4 @@
-import Koa from 'koa'
+import Koa from 'koa';
 import Router from '@koa/router';
 import KoaBody from 'koa-body';
 
@@ -31,13 +31,15 @@ app.on('error', (err, ctx) => {
     logger.error('server error', err, ctx);
     ctx.body = {
         error: 'Server error.',
-    }
+    };
 });
 
-app.use(KoaBody({
-    includeUnparsed: true,
-    parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
-}));
+app.use(
+    KoaBody({
+        includeUnparsed: true,
+        parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
+    }),
+);
 app.use(Header);
 
 // router

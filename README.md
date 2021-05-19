@@ -21,11 +21,11 @@ When creating new persona, the client needs to generate an identity, refer to [h
 
 ### Get
 
-- GET `/file/:fid` - get a file
+-   GET `/file/:fid` - get a file
 
 ### Personas
 
-- POST `/personas` - add a new persona
+-   POST `/personas` - add a new persona
 
 Body parameters
 
@@ -35,7 +35,7 @@ Body parameters
 | avatar | true     |
 | bio    | true     |
 
-- PATCH `/personas` - change a persona
+-   PATCH `/personas` - change a persona
 
 Body parameters
 
@@ -45,11 +45,11 @@ Body parameters
 | avatar | true     |
 | bio    | true     |
 
-- DELETE `/personas` - delete a persona
+-   DELETE `/personas` - delete a persona
 
 ### Items
 
-- POST `/items` - add a item to a persona
+-   POST `/items` - add a item to a persona
 
 Body parameters
 
@@ -61,7 +61,7 @@ Body parameters
 | tags     | true     |                    |
 | contents | true     |                    |
 
-- PATCH `/items/:tid` - change a item of a persona
+-   PATCH `/items/:tid` - change a item of a persona
 
 Url parameters
 
@@ -79,7 +79,7 @@ Body parameters
 | tags     | true     |
 | contents | true     |
 
-- DELETE `/items/:tid` - delete a item of a persona
+-   DELETE `/items/:tid` - delete a item of a persona
 
 Url parameters
 
@@ -89,24 +89,24 @@ Url parameters
 
 ### Links
 
-- POST `/links` - add a link to a persona
+-   POST `/links` - add a link to a persona
 
 Body parameters
 
-| Name     | Optional |
-| -------- | -------- |
-| name     | true     |
-| tags     | true     |
-| list     | true     |
+| Name | Optional |
+| ---- | -------- |
+| name | true     |
+| tags | true     |
+| list | true     |
 
-- PATCH `/links/:lid` - change a link of a persona
+-   PATCH `/links/:lid` - change a link of a persona
 
 Body parameters
 
-| Name     | Optional |
-| -------- | -------- |
-| name     | true     |
-| tags     | true     |
-| list     | true     |
+| Name | Optional |
+| ---- | -------- |
+| name | true     |
+| tags | true     |
+| list | true     |
 
-- DELETE `/links/:lid` - delete a link of a persona
+-   DELETE `/links/:lid` - delete a link of a persona

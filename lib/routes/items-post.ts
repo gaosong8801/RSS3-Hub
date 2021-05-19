@@ -6,10 +6,10 @@ import itemsVerification from './verifications/items';
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
 
-    if (!await storage.exist(ctx.state.signer)) {
+    if (!(await storage.exist(ctx.state.signer))) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found.'
+            error: 'Not Found.',
         };
         return;
     }
@@ -19,14 +19,18 @@ export default async (ctx: Koa.Context) => {
     if (verification.error) {
         ctx.status = 400;
         ctx.body = {
-            error: `Bad Request. Parameter ${verification.error}not legal.`
+            error: `Bad Request. Parameter ${verification.error}not legal.`,
         };
         return;
     }
 
-    const persona: RSS3Persona = JSON.parse(await storage.read(ctx.state.signer));
+    const persona: RSS3Persona = JSON.parse(
+        await storage.read(ctx.state.signer),
+    );
 
-    const id = persona.items[0] ? parseInt(persona.items[0].id.split('-')[2]) + 1 : 0;
+    const id = persona.items[0]
+        ? parseInt(persona.items[0].id.split('-')[2]) + 1
+        : 0;
     const item: RSS3Item = {
         id: `${ctx.state.signer}-item-${id}`,
         authors: verification.authors || [ctx.state.signer],
@@ -36,13 +40,18 @@ export default async (ctx: Koa.Context) => {
         date_published: nowDate,
         date_modified: nowDate,
         contents: verification.contents,
-    }
+    };
 
     persona.items.unshift(item);
 
     if (persona.items.length > config.itemPageSize) {
         const newList = persona.items.slice(1);
-        const newID = ctx.state.signer + '-' + (persona.items_next ? parseInt(persona.items_next.split('-')[1]) + 1 : 1);
+        const newID =
+            ctx.state.signer +
+            '-' +
+            (persona.items_next
+                ? parseInt(persona.items_next.split('-')[1]) + 1
+                : 1);
         const newContent: RSS3Items = {
             id: body.id,
             version: 'rss3.io/version/v0.1.0',

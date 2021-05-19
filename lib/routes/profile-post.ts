@@ -7,7 +7,7 @@ export default async (ctx: Koa.Context) => {
     if (await storage.exist(ctx.state.signer)) {
         ctx.status = 400;
         ctx.body = {
-            error: 'Persona already exists.'
+            error: 'Persona already exists.',
         };
         return;
     }
@@ -30,7 +30,7 @@ export default async (ctx: Koa.Context) => {
         links: [],
         items: [],
         assets: [],
-    }
+    };
 
     const content = JSON.stringify(persona);
     await storage.write(ctx.state.signer, content);

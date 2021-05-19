@@ -1,9 +1,9 @@
 import { is } from 'typescript-is';
 
 export default function (body: any): {
-    tags: string[],
-    list: Address[],
-    error: string,
+    tags: string[];
+    list: Address[];
+    error: string;
 } {
     let error = '';
 
@@ -30,7 +30,6 @@ export default function (body: any): {
     } catch (error) {
         error += 'list ';
     }
-
 
     return {
         tags,

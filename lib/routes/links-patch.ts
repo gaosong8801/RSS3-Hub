@@ -6,10 +6,10 @@ export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
     const lid = ctx.params.lid;
 
-    if (!await storage.exist(ctx.state.signer)) {
+    if (!(await storage.exist(ctx.state.signer))) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found.'
+            error: 'Not Found.',
         };
         return;
     }
@@ -18,18 +18,20 @@ export default async (ctx: Koa.Context) => {
     if (verification.error) {
         ctx.status = 400;
         ctx.body = {
-            error: `Bad Request. Parameter ${verification.error}not legal.`
+            error: `Bad Request. Parameter ${verification.error}not legal.`,
         };
         return;
     }
 
     let index;
-    const content: RSS3Persona = JSON.parse(await storage.read(ctx.state.signer));
+    const content: RSS3Persona = JSON.parse(
+        await storage.read(ctx.state.signer),
+    );
     index = content.links.findIndex((item) => item.id === lid);
     if (index === -1) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found.'
+            error: 'Not Found.',
         };
         return;
     }
@@ -39,7 +41,9 @@ export default async (ctx: Koa.Context) => {
         tags: verification.tags,
         list: verification.list,
     };
-    Object.keys(patch).forEach(key => patch[key] === undefined && delete patch[key]);
+    Object.keys(patch).forEach(
+        (key) => patch[key] === undefined && delete patch[key],
+    );
 
     content.links[index] = Object.assign(content.links[index], patch);
 

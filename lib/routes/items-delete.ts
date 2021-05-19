@@ -5,10 +5,10 @@ export default async (ctx: Koa.Context) => {
     let id = ctx.query.id || ctx.state.signer;
     const tid = ctx.params.tid;
 
-    if (!await await storage.exist(id)) {
+    if (!(await storage.exist(id))) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found.'
+            error: 'Not Found.',
         };
         return;
     }
@@ -25,7 +25,7 @@ export default async (ctx: Koa.Context) => {
                 id = null;
                 ctx.status = 404;
                 ctx.body = {
-                    error: 'Not Found.'
+                    error: 'Not Found.',
                 };
             }
         }

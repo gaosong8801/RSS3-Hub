@@ -19,7 +19,7 @@ interface RSS3Persona extends RSS3Base {
         name?: string;
         avatar?: Address; // Link to a third party file
         bio?: string;
-		tags?: string[];
+        tags?: string[];
     };
 
     links: RSS3Link[];

@@ -20,38 +20,49 @@ export default {
         if (config.storage.type === 'local') {
             await fsPromises.writeFile(config.storage.path + name, content);
         } else if (config.storage.type === 'spaces') {
-            await s3.putObject({
-                Bucket: config.storage.spacesName,
-                Key: config.storage.path + name,
-                Body: content,
-                ACL: 'public-read',
-            }).promise();
+            await s3
+                .putObject({
+                    Bucket: config.storage.spacesName,
+                    Key: config.storage.path + name,
+                    Body: content,
+                    ACL: 'public-read',
+                })
+                .promise();
         }
     },
     read: async (name: string) => {
         if (config.storage.type === 'local') {
-            return await fsPromises.readFile(config.storage.path + name, 'utf-8');
+            return await fsPromises.readFile(
+                config.storage.path + name,
+                'utf-8',
+            );
         } else if (config.storage.type === 'spaces') {
-            return (await s3.getObject({
-                Bucket: config.storage.spacesName,
-                Key: config.storage.path + name,
-            }).promise()).Body.toString();
+            return (
+                await s3
+                    .getObject({
+                        Bucket: config.storage.spacesName,
+                        Key: config.storage.path + name,
+                    })
+                    .promise()
+            ).Body.toString();
         }
     },
     exist: async (name: string) => {
         let result = true;
         if (config.storage.type === 'local') {
             try {
-                await fsPromises.access(config.storage.path + name)
+                await fsPromises.access(config.storage.path + name);
             } catch (headErr) {
                 result = false;
             }
         } else if (config.storage.type === 'spaces') {
             try {
-                await s3.headObject({
-                    Bucket: config.storage.spacesName,
-                    Key: config.storage.path + name,
-                }).promise();
+                await s3
+                    .headObject({
+                        Bucket: config.storage.spacesName,
+                        Key: config.storage.path + name,
+                    })
+                    .promise();
             } catch (headErr) {
                 if (headErr.code === 'NotFound') {
                     result = false;
@@ -64,10 +75,12 @@ export default {
         if (config.storage.type === 'local') {
             await fsPromises.rm(config.storage.path + name);
         } else if (config.storage.type === 'spaces') {
-            await s3.deleteObject({
-                Bucket: config.storage.spacesName,
-                Key: config.storage.path + name,
-            }).promise();
+            await s3
+                .deleteObject({
+                    Bucket: config.storage.spacesName,
+                    Key: config.storage.path + name,
+                })
+                .promise();
         }
-    }
+    },
 };

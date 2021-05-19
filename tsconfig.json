@@ -10,16 +10,11 @@
         "outDir": "dist",
         "baseUrl": ".",
         "paths": {
-            "*": [
-                "node_modules/*",
-                "lib/types/*"
-            ]
+            "*": ["node_modules/*", "lib/types/*"]
         },
         "plugins": [
             { "transform": "typescript-is/lib/transform-inline/transformer" }
         ]
     },
-    "include": [
-        "lib/**/*"
-    ]
+    "include": ["lib/**/*"]
 }

@@ -1,10 +1,10 @@
 import { is } from 'typescript-is';
 
 export default function (body: any): {
-    authors: Address[],
-    tags: string[],
-    contents: RSS3ItemContents[],
-    error: string,
+    authors: Address[];
+    tags: string[];
+    contents: RSS3ItemContents[];
+    error: string;
 } {
     let error = '';
 

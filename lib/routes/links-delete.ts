@@ -4,21 +4,23 @@ import storage from '../utils/storage';
 export default async (ctx: Koa.Context) => {
     const lid = ctx.params.lid;
 
-    if (!await storage.exist(ctx.state.signer)) {
+    if (!(await storage.exist(ctx.state.signer))) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found.'
+            error: 'Not Found.',
         };
         return;
     }
 
     let index;
-    const content: RSS3Persona = JSON.parse(await storage.read(ctx.state.signer));
+    const content: RSS3Persona = JSON.parse(
+        await storage.read(ctx.state.signer),
+    );
     index = content.links.findIndex((item) => item.id === lid);
     if (index === -1) {
         ctx.status = 404;
         ctx.body = {
-            error: 'Not Found.'
+            error: 'Not Found.',
         };
         return;
     }
