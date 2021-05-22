@@ -1,6 +1,6 @@
 import config from '../config';
 import fs from 'fs';
-import fsPromises from 'fs/promises';
+import { promises as fsPromises } from 'fs';
 import AWS from 'aws-sdk';
 
 let s3: AWS.S3;
