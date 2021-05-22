@@ -18,69 +18,85 @@ if (config.storage.type === 'local' && !fs.existsSync(config.storage.path)) {
 export default {
     write: async (name: string, content: string) => {
         if (config.storage.type === 'local') {
-            await fsPromises.writeFile(config.storage.path + name, content);
+            fsPromises.writeFile(config.storage.path + name, content);
         } else if (config.storage.type === 'spaces') {
-            await s3
-                .putObject({
-                    Bucket: config.storage.spacesName,
-                    Key: config.storage.path + name,
-                    Body: content,
-                    ACL: 'public-read',
-                })
-                .promise();
+            s3.putObject({
+                Bucket: config.storage.spacesName,
+                Key: config.storage.path + name,
+                Body: content,
+                ACL: 'public-read',
+            }).promise();
         }
     },
     read: async (name: string) => {
         if (config.storage.type === 'local') {
-            return await fsPromises.readFile(
-                config.storage.path + name,
-                'utf-8',
-            );
+            return fsPromises.readFile(config.storage.path + name, 'utf-8');
         } else if (config.storage.type === 'spaces') {
-            return (
-                await s3
+            return new Promise(async (resolve) => {
+                const data = await s3
                     .getObject({
                         Bucket: config.storage.spacesName,
                         Key: config.storage.path + name,
                     })
-                    .promise()
-            ).Body.toString();
+                    .promise();
+                resolve(data.Body.toString());
+            });
         }
     },
     exist: async (name: string) => {
-        let result = true;
-        if (config.storage.type === 'local') {
-            try {
-                await fsPromises.access(config.storage.path + name);
-            } catch (headErr) {
-                result = false;
-            }
-        } else if (config.storage.type === 'spaces') {
-            try {
-                await s3
-                    .headObject({
-                        Bucket: config.storage.spacesName,
-                        Key: config.storage.path + name,
-                    })
-                    .promise();
-            } catch (headErr) {
-                if (headErr.code === 'NotFound') {
+        return new Promise(async (resolve) => {
+            let result = true;
+            if (config.storage.type === 'local') {
+                try {
+                    await fsPromises.access(config.storage.path + name);
+                } catch (headErr) {
                     result = false;
                 }
+            } else if (config.storage.type === 'spaces') {
+                try {
+                    await s3
+                        .headObject({
+                            Bucket: config.storage.spacesName,
+                            Key: config.storage.path + name,
+                        })
+                        .promise();
+                } catch (headErr) {
+                    if (headErr.code === 'NotFound') {
+                        result = false;
+                    }
+                }
             }
-        }
-        return result;
+            resolve(result);
+        });
     },
-    rm: async (name: string) => {
-        if (config.storage.type === 'local') {
-            await fsPromises.rm(config.storage.path + name);
-        } else if (config.storage.type === 'spaces') {
-            await s3
-                .deleteObject({
+    delete: async (list: string[]) => {
+        return s3
+            .deleteObjects(
+                {
                     Bucket: config.storage.spacesName,
-                    Key: config.storage.path + name,
-                })
+                    Delete: {
+                        Objects: list.map((item) => ({
+                            Key: item,
+                        })),
+                        Quiet: false,
+                    },
+                },
+                () => {},
+            )
+            .promise();
+    },
+    list: async (prefix: string) => {
+        return <Promise<string[]>>new Promise(async (resolve) => {
+            const data = await s3
+                .listObjectsV2(
+                    {
+                        Bucket: config.storage.spacesName,
+                        Prefix: config.storage.path + prefix,
+                    },
+                    () => {},
+                )
                 .promise();
-        }
+            resolve(data.Contents.map((content) => content.Key));
+        });
     },
 };

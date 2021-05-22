@@ -1,69 +1,99 @@
-type Address = string;
+type IRSS3ID = string;
+type IRSS3ItemID = string;
+type IRSS3ItemsID = string;
+type IRSS3ListID = string;
+type ThirdPartyAddress = string[];
 
-// Common attributes for each file
-interface RSS3Base {
-    id: Address;
-    version: 'rss3.io/version/v0.1.0';
-    type: string;
+type IRSS3Content = IRSS3 | IRSS3Items | IRSS3List;
+
+// Common attributes for each files
+interface IRSS3Base {
+    id: IRSS3ID | IRSS3ItemsID | IRSS3ListID;
+    '@version': 'rss3.io/version/v0.1.0';
     date_created: string;
     date_updated: string;
-    items: any[];
-    items_next?: Address; // T
+    signature?: string;
 }
 
-// Entrance, RSS3Persona file
-interface RSS3Persona extends RSS3Base {
-    type: 'persona';
+// Entrance, IRSS3 file
+interface IRSS3 extends IRSS3Base {
+    id: IRSS3ID;
 
-    profile: {
-        name?: string;
-        avatar?: Address; // Link to a third party file
-        bio?: string;
+    profile?: IRSS3Profile;
+
+    items?: IRSS3Item[];
+    items_next?: IRSS3ItemsID;
+
+    links?: {
+        type: string;
         tags?: string[];
-    };
+        list: IRSS3ID[];
+        list_next?: IRSS3ListID;
+        signature?: string;
+    }[];
+    '@backlinks'?: {
+        type: string;
+        list: IRSS3ID[];
+        list_next?: IRSS3ListID;
+    }[];
 
-    links: RSS3Link[];
-
-    items: RSS3Item[];
-
-    assets: {
-        id: string;
-        name: string;
+    assets?: {
+        type: string;
         tags?: string[];
-        list: string[];
+        content: string;
     }[];
 }
 
-// RSS3Items file
-interface RSS3Items extends RSS3Base {
-    type: 'items';
-    items: RSS3Item[];
+// IRSS3Items file
+interface IRSS3Items extends IRSS3Base {
+    id: IRSS3ItemsID;
+
+    items: IRSS3Item[];
+    items_next?: IRSS3ItemsID;
 }
 
-interface RSS3ItemContents {
-    id: Address; // Link to a third party file
-    mime_type: string;
-    name?: string;
-    tags?: string[];
-    size_in_bytes?: string;
-    duration_in_seconds?: string;
+// IRSS3List file
+interface IRSS3List extends IRSS3Base {
+    id: IRSS3ListID;
+
+    list: IRSS3ID[] | IRSS3ItemID[];
+    list_next?: IRSS3ListID;
 }
 
-interface RSS3Item {
-    id: string;
-    authors?: Address[];
+interface IRSS3Item {
+    id: IRSS3ItemID;
+    authors?: IRSS3ID[];
     title?: string;
     summary?: string;
     tags?: string[];
     date_published?: string;
     date_modified?: string;
 
-    contents?: RSS3ItemContents[];
+    type?: string;
+    upstream?: IRSS3ItemID;
+
+    contents?: {
+        address: ThirdPartyAddress;
+        mime_type: string;
+        name?: string;
+        tags?: string[];
+        size_in_bytes?: string;
+        duration_in_seconds?: string;
+    }[];
+
+    '@contexts'?: {
+        type?: string;
+        list: IRSS3ItemID[];
+        list_next?: IRSS3ListID;
+    }[];
+
+    signature?: string;
 }
 
-interface RSS3Link {
-    id: string;
-    name: string;
+interface IRSS3Profile {
+    name?: string;
+    avatar?: ThirdPartyAddress;
+    bio?: string;
     tags?: string[];
-    list: Address[];
+    signature?: string;
 }
