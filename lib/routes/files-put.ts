@@ -59,15 +59,15 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const getIndex = (content: IRSS3Content | IRSS3Item) => {
-        const index = content.id.split('-')[2];
+    const getIndex = (id: string) => {
+        const index = id.split('-')[2];
         if (index) {
             return parseInt(index);
         } else {
             return Infinity;
         }
     };
-    const sorted = contents.sort((a, b) => getIndex(b) - getIndex(a));
+    const sorted = contents.sort((a, b) => getIndex(b.id) - getIndex(a.id));
     let items: IRSS3Item[] = [];
     sorted.forEach((content) => {
         if ((<IRSS3 | IRSS3Items>content).items) {
@@ -77,7 +77,7 @@ export default async (ctx: Koa.Context) => {
     // ID order check
     const idOrderCheck = items.every((item, index) => {
         if (index !== 0) {
-            if (getIndex(item) === getIndex(items[index - 1]) - 1) {
+            if (getIndex(item.id) === getIndex(items[index - 1].id) - 1) {
                 return true;
             } else {
                 return false;
@@ -94,10 +94,11 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
+    let oldContent: IRSS3;
     // no deletion check
     if (await storage.exist(persona)) {
-        const oldContent: IRSS3 = JSON.parse(await storage.read(persona));
-        if (getIndex(oldContent.items[0]) > getIndex(items[0])) {
+        oldContent = JSON.parse(await storage.read(persona));
+        if (getIndex(oldContent.items[0].id) > getIndex(items[0].id)) {
             ctx.status = 400;
             ctx.body = {
                 error: `No deletion check error.`,
@@ -170,8 +171,49 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    sorted.forEach((content) => {
-        storage.write(content.id, JSON.stringify(content));
+    sorted.forEach(async (content) => {
+        await storage.write(content.id, JSON.stringify(content));
+    });
+
+    // contexts
+    let newItems = items;
+    if (oldContent) {
+        const newItemsLength =
+            getIndex(items[0].id) - getIndex(oldContent.items[0].id);
+        newItems = items.slice(0, newItemsLength);
+    }
+    newItems.forEach(async (newItem) => {
+        if (newItem.upstream) {
+            const upstreamPersona = newItem.upstream.split('-')[0];
+            const upstreamIndex = getIndex(newItem.upstream);
+            let fileID =
+                upstreamPersona +
+                '-items-' +
+                Math.ceil(upstreamIndex / config.itemPageSize);
+            if (!(await storage.exist(fileID))) {
+                fileID = upstreamPersona;
+            }
+            const upstreamContent: IRSS3 | IRSS3Items = JSON.parse(
+                await storage.read(fileID),
+            );
+            const index =
+                config.itemPageSize - 1 - (upstreamIndex % config.itemPageSize);
+            if (!upstreamContent.items[index]['@contexts']) {
+                upstreamContent.items[index]['@contexts'] = [];
+            }
+            let typeContext = upstreamContent.items[index]['@contexts'].find(
+                (context) => context.type === newItem.type,
+            );
+            if (!typeContext) {
+                typeContext = {
+                    type: newItem.type,
+                    list: [],
+                };
+                upstreamContent.items[index]['@contexts'].push(typeContext);
+            }
+            typeContext.list.push(newItem.id);
+            await storage.write(fileID, JSON.stringify(upstreamContent));
+        }
     });
 
     ctx.body = contents.map((content) => content.id);

@@ -2,6 +2,9 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
+    itemPageSize: 20,
+    listPageSize: 2000,
+    maxValueLength: 280,
     storage: {
         type: process.env.STORAGE_TYPE || 'local',
         path: 'storage/',
@@ -10,5 +13,4 @@ export default {
         spacesKey: process.env.SPACES_KEY,
         spacesSecret: process.env.SPACES_SECRET,
     },
-    maxValueLength: 280,
 };
