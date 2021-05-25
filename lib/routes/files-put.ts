@@ -182,7 +182,7 @@ export default async (ctx: Koa.Context) => {
             getIndex(items[0].id) - getIndex(oldContent.items[0].id);
         newItems = items.slice(0, newItemsLength);
     }
-    newItems.forEach(async (newItem) => {
+    for (const newItem of newItems) {
         if (newItem.upstream) {
             const upstreamPersona = newItem.upstream.split('-')[0];
             const upstreamIndex = getIndex(newItem.upstream);
@@ -214,7 +214,7 @@ export default async (ctx: Koa.Context) => {
             typeContext.list.push(newItem.id);
             await storage.write(fileID, JSON.stringify(upstreamContent));
         }
-    });
+    }
 
     ctx.body = contents.map((content) => content.id);
 };
