@@ -32,7 +32,7 @@ export default {
         if (config.storage.type === 'local') {
             return fsPromises.readFile(config.storage.path + name, 'utf-8');
         } else if (config.storage.type === 'spaces') {
-            return new Promise(async (resolve) => {
+            return <Promise<string>>new Promise(async (resolve) => {
                 const data = await s3
                     .getObject({
                         Bucket: config.storage.spacesName,
@@ -44,7 +44,7 @@ export default {
         }
     },
     exist: async (name: string) => {
-        return new Promise(async (resolve) => {
+        return <Promise<boolean>>new Promise(async (resolve) => {
             let result = true;
             if (config.storage.type === 'local') {
                 try {

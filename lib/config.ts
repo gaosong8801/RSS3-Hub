@@ -10,5 +10,5 @@ export default {
         spacesKey: process.env.SPACES_KEY,
         spacesSecret: process.env.SPACES_SECRET,
     },
-    itemPageSize: 2,
+    maxValueLength: 280,
 };
