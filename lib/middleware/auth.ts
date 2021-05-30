@@ -2,6 +2,7 @@ import type Koa from 'koa';
 // @ts-ignore
 import unparsed from 'koa-body/unparsed.js';
 import EthCrypto from 'eth-crypto';
+import utils from '../utils/index';
 
 export default async (ctx: Koa.Context, next: Koa.Next) => {
     if (ctx.method !== 'GET') {
@@ -10,7 +11,7 @@ export default async (ctx: Koa.Context, next: Koa.Next) => {
             const message = ctx.method + ctx.path + ctx.request.body[unparsed];
             ctx.state.signer = EthCrypto.recover(
                 <string>ctx.headers.signature,
-                EthCrypto.hash.keccak256(message),
+                utils.signature.hash(message),
             );
         } else {
             ctx.status = 401;
