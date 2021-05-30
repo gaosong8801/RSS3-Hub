@@ -1,8 +1,8 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
+import utils from '../utils/index';
 
 export default async (ctx: Koa.Context) => {
-    if (!(await storage.exist(ctx.state.signer))) {
+    if (!(await utils.storage.exist(ctx.state.signer))) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.',
@@ -13,8 +13,10 @@ export default async (ctx: Koa.Context) => {
     let personaContent;
     let fileName = ctx.state.signer;
     do {
-        const content: RSS3Base = JSON.parse(await storage.read(fileName));
-        await storage.rm(fileName);
+        const content: RSS3Base = JSON.parse(
+            await utils.storage.read(fileName),
+        );
+        await utils.storage.rm(fileName);
         if (!personaContent) {
             personaContent = content;
         }

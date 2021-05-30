@@ -6,7 +6,7 @@ import cors from '@koa/cors';
 import Auth from './middleware/auth';
 import Header from './middleware/header';
 
-import logger from './utils/logger';
+import utils from './utils/index';
 
 import FileGet from './routes/file-get';
 
@@ -23,13 +23,13 @@ import LinksPatch from './routes/links-patch';
 import LinksDelete from './routes/links-delete';
 
 process.on('uncaughtException', (e) => {
-    logger.error('uncaughtException: ' + e);
+    utils.logger.error('uncaughtException: ' + e);
 });
 
 const app = new Koa();
 
 app.on('error', (err, ctx) => {
-    logger.error('server error', err, ctx);
+    utils.logger.error('server error', err, ctx);
     ctx.body = {
         error: 'Server error.',
     };

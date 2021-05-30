@@ -1,12 +1,12 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
+import utils from '../utils/index';
 import config from '../config';
 import itemsVerification from './verifications/items';
 
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
 
-    if (!(await storage.exist(ctx.state.signer))) {
+    if (!(await utils.storage.exist(ctx.state.signer))) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.',
@@ -25,7 +25,7 @@ export default async (ctx: Koa.Context) => {
     }
 
     const persona: RSS3Persona = JSON.parse(
-        await storage.read(ctx.state.signer),
+        await utils.storage.read(ctx.state.signer),
     );
 
     const id = persona.items[0]
@@ -62,14 +62,14 @@ export default async (ctx: Koa.Context) => {
             items: newList,
             items_next: persona.items_next,
         };
-        await storage.write(newID, JSON.stringify(newContent));
+        await utils.storage.write(newID, JSON.stringify(newContent));
 
         persona.items = persona.items.slice(0, 1);
         persona.items_next = newID;
     }
 
     persona.date_created = nowDate;
-    await storage.write(ctx.state.signer, JSON.stringify(persona));
+    await utils.storage.write(ctx.state.signer, JSON.stringify(persona));
 
     ctx.body = item;
 };

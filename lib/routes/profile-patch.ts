@@ -1,10 +1,10 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
+import utils from '../utils/index';
 
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
 
-    if (!(await storage.exist(ctx.state.signer))) {
+    if (!(await utils.storage.exist(ctx.state.signer))) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.',
@@ -13,7 +13,7 @@ export default async (ctx: Koa.Context) => {
     }
 
     const persona: RSS3Persona = JSON.parse(
-        await storage.read(ctx.state.signer),
+        await utils.storage.read(ctx.state.signer),
     );
 
     const patch: any = {
@@ -29,6 +29,6 @@ export default async (ctx: Koa.Context) => {
     persona.date_updated = new Date().toISOString();
 
     const content = JSON.stringify(persona);
-    await storage.write(ctx.state.signer, content);
+    await utils.storage.write(ctx.state.signer, content);
     ctx.body = content;
 };

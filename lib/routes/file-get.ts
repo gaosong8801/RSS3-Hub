@@ -1,10 +1,10 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
+import utils from '../utils/index';
 
 export default async (ctx: Koa.Context) => {
     const fid = ctx.params.fid;
 
-    if (!(await storage.exist(fid))) {
+    if (!(await utils.storage.exist(fid))) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.',
@@ -12,5 +12,5 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    ctx.body = await storage.read(fid);
+    ctx.body = await utils.storage.read(fid);
 };

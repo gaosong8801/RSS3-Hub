@@ -1,10 +1,10 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
+import utils from '../utils/index';
 
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
 
-    if (await storage.exist(ctx.state.signer)) {
+    if (await utils.storage.exist(ctx.state.signer)) {
         ctx.status = 400;
         ctx.body = {
             error: 'Persona already exists.',
@@ -33,6 +33,6 @@ export default async (ctx: Koa.Context) => {
     };
 
     const content = JSON.stringify(persona);
-    await storage.write(ctx.state.signer, content);
+    await utils.storage.write(ctx.state.signer, content);
     ctx.body = content;
 };

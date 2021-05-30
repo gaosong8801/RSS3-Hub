@@ -1,5 +1,5 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
+import utils from '../utils/index';
 import itemsVerification from './verifications/items';
 
 export default async (ctx: Koa.Context) => {
@@ -7,7 +7,7 @@ export default async (ctx: Koa.Context) => {
     let id = ctx.query.id || ctx.state.signer;
     const tid = ctx.params.tid;
 
-    if (!(await storage.exist(id))) {
+    if (!(await utils.storage.exist(id))) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.',
@@ -27,7 +27,7 @@ export default async (ctx: Koa.Context) => {
     let index;
     let content: RSS3Base;
     do {
-        content = JSON.parse(await storage.read(id));
+        content = JSON.parse(await utils.storage.read(id));
         index = content.items.findIndex((item) => item.id === tid);
         if (index === -1) {
             if (content.items_next) {
@@ -57,7 +57,7 @@ export default async (ctx: Koa.Context) => {
 
         content.items[index] = Object.assign(content.items[index], patch);
 
-        await storage.write(id, JSON.stringify(content));
+        await utils.storage.write(id, JSON.stringify(content));
         ctx.body = content.items[index];
     }
 };

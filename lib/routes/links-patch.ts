@@ -1,12 +1,12 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
+import utils from '../utils/index';
 import linksVerification from './verifications/links';
 
 export default async (ctx: Koa.Context) => {
     const body = ctx.request.body;
     const lid = ctx.params.lid;
 
-    if (!(await storage.exist(ctx.state.signer))) {
+    if (!(await utils.storage.exist(ctx.state.signer))) {
         ctx.status = 404;
         ctx.body = {
             error: 'Not Found.',
@@ -25,7 +25,7 @@ export default async (ctx: Koa.Context) => {
 
     let index;
     const content: RSS3Persona = JSON.parse(
-        await storage.read(ctx.state.signer),
+        await utils.storage.read(ctx.state.signer),
     );
     index = content.links.findIndex((item) => item.id === lid);
     if (index === -1) {
@@ -47,6 +47,6 @@ export default async (ctx: Koa.Context) => {
 
     content.links[index] = Object.assign(content.links[index], patch);
 
-    await storage.write(ctx.state.signer, JSON.stringify(content));
+    await utils.storage.write(ctx.state.signer, JSON.stringify(content));
     ctx.body = content.links[index];
 };
