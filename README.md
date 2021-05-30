@@ -8,6 +8,21 @@ A centralized implementation of [RSS3](https://github.com/NaturalSelectionLabs/R
 
 ## API
 
+### Authorization
+
+Authentication is required for all requests except GET method, which are authenticated by the `signature` parameter in the request header
+
+`signature` is is calculated from request path, request body and persona's private key: sign `keccak256(requestMethod + requestPath + requestBody)` with persona's private key, then put the result as `signature` parameter to the the request header
+
+```js
+import EthCrypto from 'eth-crypto';
+
+const message = ctx.method + ctx.path + ctx.request.body[unparsed];
+const signature = EthCrypto.sign(privateKey, EthCrypto.hash.keccak256(message));
+```
+
+When creating new persona, the client needs to generate an identity, refer to [here](https://github.com/pubkey/eth-crypto#createidentity)
+
 ### File
 
 -   GET `/file/:fid` - get a file
