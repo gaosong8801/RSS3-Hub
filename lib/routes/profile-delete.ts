@@ -1,5 +1,5 @@
 import type Koa from 'koa';
-import utils from '../utils/index';
+import utils from '../utils';
 
 export default async (ctx: Koa.Context) => {
     if (!(await utils.storage.exist(ctx.state.signer))) {

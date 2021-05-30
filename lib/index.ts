@@ -6,7 +6,7 @@ import cors from '@koa/cors';
 import Auth from './middleware/auth';
 import Header from './middleware/header';
 
-import utils from './utils/index';
+import utils from './utils';
 
 import FileGet from './routes/file-get';
 

@@ -1,5 +1,5 @@
 import type Koa from 'koa';
-import utils from '../utils/index';
+import utils from '../utils';
 import linksVerification from './verifications/links';
 
 export default async (ctx: Koa.Context) => {

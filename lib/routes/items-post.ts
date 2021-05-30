@@ -1,5 +1,5 @@
 import type Koa from 'koa';
-import utils from '../utils/index';
+import utils from '../utils';
 import config from '../config';
 import itemsVerification from './verifications/items';
 

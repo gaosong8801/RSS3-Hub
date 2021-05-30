@@ -2,7 +2,7 @@ import type Koa from 'koa';
 // @ts-ignore
 import unparsed from 'koa-body/unparsed.js';
 import EthCrypto from 'eth-crypto';
-import utils from '../utils/index';
+import utils from '../utils';
 
 export default async (ctx: Koa.Context, next: Koa.Next) => {
     if (ctx.method !== 'GET') {
