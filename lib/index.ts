@@ -10,9 +10,10 @@ import utils from './utils';
 
 import FileGet from './routes/file-get';
 
-import ProfilePost from './routes/profile-post';
+import PersonaPost from './routes/persona-post';
+import PersonaDelete from './routes/persona-delete';
+
 import ProfilePatch from './routes/profile-patch';
-import ProfileDelete from './routes/profile-delete';
 
 import ItemsPost from './routes/items-post';
 import ItemsPatch from './routes/items-patch';
@@ -49,9 +50,10 @@ const router = new Router();
 
 router.get('/file/:fid', FileGet);
 
-router.post('/profile', Auth, ProfilePost);
+router.post('/profile', Auth, PersonaPost);
+router.delete('/profile', Auth, PersonaDelete);
+
 router.patch('/profile', Auth, ProfilePatch);
-router.delete('/profile', Auth, ProfileDelete);
 
 router.post('/items', Auth, ItemsPost);
 router.patch('/items/:tid', Auth, ItemsPatch);

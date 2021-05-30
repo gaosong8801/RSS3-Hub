@@ -13,23 +13,12 @@ export default async (ctx: Koa.Context) => {
     }
     const nowDate = new Date().toISOString();
 
-    const persona: RSS3Persona = {
+    const persona: IRSS3 = {
         id: ctx.state.signer,
-        version: 'rss3.io/version/v0.1.0',
-        type: 'persona',
+        '@version': 'rss3.io/version/v0.1.0',
         date_created: nowDate,
         date_updated: nowDate,
-
-        profile: {
-            name: body.name,
-            avatar: body.avatar,
-            bio: body.bio,
-            tags: body.tags,
-        },
-
-        links: [],
-        items: [],
-        assets: [],
+        signature: body.fileSig,
     };
 
     const content = JSON.stringify(persona);
