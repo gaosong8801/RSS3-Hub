@@ -21,9 +21,10 @@ export default async (ctx: Koa.Context) => {
     // signature check
     const signatureCheck = contents.every((content) => {
         const fileID = content.id;
+        const currentPersona = utils.parseId(fileID).persona;
         if (!persona) {
-            persona = fileID.split('-')[0];
-        } else if (persona !== fileID.split('-')[0]) {
+            persona = currentPersona;
+        } else if (persona !== currentPersona) {
             return false;
         }
         const signer = EthCrypto.recover(
@@ -55,15 +56,9 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    const getIndex = (id: string) => {
-        const index = id.split('-')[2];
-        if (index) {
-            return parseInt(index);
-        } else {
-            return Infinity;
-        }
-    };
-    const sorted = contents.sort((a, b) => getIndex(b.id) - getIndex(a.id));
+    const sorted = contents.sort(
+        (a, b) => utils.parseId(b.id).index - utils.parseId(a.id).index,
+    );
     let items: IRSS3Item[] = [];
     sorted.forEach((content) => {
         if ((<IRSS3 | IRSS3Items>content).items) {
@@ -73,7 +68,10 @@ export default async (ctx: Koa.Context) => {
     // ID order check
     const idOrderCheck = items.every((item, index) => {
         if (index !== 0) {
-            if (getIndex(item.id) === getIndex(items[index - 1].id) - 1) {
+            if (
+                utils.parseId(item.id).index ===
+                utils.parseId(items[index - 1].id).index - 1
+            ) {
                 return true;
             } else {
                 return false;
@@ -94,7 +92,10 @@ export default async (ctx: Koa.Context) => {
     // no deletion check
     if (await storage.exist(persona)) {
         oldContent = JSON.parse(await storage.read(persona));
-        if (getIndex(oldContent.items[0].id) > getIndex(items[0].id)) {
+        if (
+            utils.parseId(oldContent.items[0].id).index >
+            utils.parseId(items[0].id).index
+        ) {
             ctx.status = 400;
             ctx.body = {
                 error: `No deletion check error.`,
@@ -175,13 +176,14 @@ export default async (ctx: Koa.Context) => {
     let newItems = items;
     if (oldContent) {
         const newItemsLength =
-            getIndex(items[0].id) - getIndex(oldContent.items[0].id);
+            utils.parseId(items[0].id).index -
+            utils.parseId(oldContent.items[0].id).index;
         newItems = items.slice(0, newItemsLength);
     }
     for (const newItem of newItems) {
         if (newItem.upstream) {
-            const upstreamPersona = newItem.upstream.split('-')[0];
-            const upstreamIndex = getIndex(newItem.upstream);
+            const upstreamPersona = utils.parseId(newItem.upstream).persona;
+            const upstreamIndex = utils.parseId(newItem.upstream).index;
             let fileID =
                 upstreamPersona +
                 '-items-' +
