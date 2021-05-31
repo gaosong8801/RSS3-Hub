@@ -6,10 +6,10 @@ import { equals } from 'typescript-is';
 import config from '../config';
 
 export default async (ctx: Koa.Context) => {
-    const contents: IRSS3Content[] = ctx.request.body.contents;
+    const contents: RSS3Content[] = ctx.request.body.contents;
 
     // type check
-    if (!equals<IRSS3Content[]>(contents)) {
+    if (!equals<RSS3Content[]>(contents)) {
         ctx.status = 400;
         ctx.body = {
             error: `Type check error.`,
@@ -34,8 +34,8 @@ export default async (ctx: Koa.Context) => {
         if (signer !== persona) {
             return false;
         }
-        if ((<IRSS3 | IRSS3Items>content).items) {
-            return (<IRSS3 | IRSS3Items>content).items.every((item) => {
+        if ((<RSS3Index | RSS3Items>content).items) {
+            return (<RSS3Index | RSS3Items>content).items.every((item) => {
                 const signer = EthCrypto.recover(
                     item.signature,
                     utils.signature.hash(item),
@@ -59,10 +59,10 @@ export default async (ctx: Koa.Context) => {
     const sorted = contents.sort(
         (a, b) => utils.parseId(b.id).index - utils.parseId(a.id).index,
     );
-    let items: IRSS3Item[] = [];
+    let items: RSS3Item[] = [];
     sorted.forEach((content) => {
-        if ((<IRSS3 | IRSS3Items>content).items) {
-            items = items.concat((<IRSS3 | IRSS3Items>content).items);
+        if ((<RSS3Index | RSS3Items>content).items) {
+            items = items.concat((<RSS3Index | RSS3Items>content).items);
         }
     });
     // ID order check
@@ -88,7 +88,7 @@ export default async (ctx: Koa.Context) => {
         return;
     }
 
-    let oldContent: IRSS3;
+    let oldContent: RSS3Index;
     // no deletion check
     if (await storage.exist(persona)) {
         oldContent = JSON.parse(await storage.read(persona));
@@ -191,7 +191,7 @@ export default async (ctx: Koa.Context) => {
             if (!(await storage.exist(fileID))) {
                 fileID = upstreamPersona;
             }
-            const upstreamContent: IRSS3 | IRSS3Items = JSON.parse(
+            const upstreamContent: RSS3Index | RSS3Items = JSON.parse(
                 await storage.read(fileID),
             );
             const index =
