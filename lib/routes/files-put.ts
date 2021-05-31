@@ -1,5 +1,4 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
 import utils from '../utils';
 import { equals } from 'typescript-is';
 import config from '../config';
@@ -91,8 +90,8 @@ export default async (ctx: Koa.Context) => {
 
     let oldContent: RSS3Index;
     // no deletion check
-    if (await storage.exist(persona)) {
-        oldContent = JSON.parse(await storage.read(persona));
+    if (await utils.storage.exist(persona)) {
+        oldContent = JSON.parse(await utils.storage.read(persona));
         if (
             utils.parseId(oldContent.items[0].id).index >
             utils.parseId(items[0].id).index
@@ -170,7 +169,7 @@ export default async (ctx: Koa.Context) => {
     }
 
     sorted.forEach(async (content) => {
-        await storage.write(content.id, JSON.stringify(content));
+        await utils.storage.write(content.id, JSON.stringify(content));
     });
 
     // contexts
@@ -189,11 +188,11 @@ export default async (ctx: Koa.Context) => {
                 upstreamPersona +
                 '-items-' +
                 Math.ceil(upstreamIndex / config.itemPageSize);
-            if (!(await storage.exist(fileID))) {
+            if (!(await utils.storage.exist(fileID))) {
                 fileID = upstreamPersona;
             }
             const upstreamContent: RSS3Index | RSS3Items = JSON.parse(
-                await storage.read(fileID),
+                await utils.storage.read(fileID),
             );
             const index =
                 config.itemPageSize - 1 - (upstreamIndex % config.itemPageSize);
@@ -211,7 +210,7 @@ export default async (ctx: Koa.Context) => {
                 upstreamContent.items[index]['@contexts'].push(typeContext);
             }
             typeContext.list.push(newItem.id);
-            await storage.write(fileID, JSON.stringify(upstreamContent));
+            await utils.storage.write(fileID, JSON.stringify(upstreamContent));
         }
     }
 
