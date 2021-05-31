@@ -4,6 +4,7 @@ import KoaBody from 'koa-body';
 import cors from '@koa/cors';
 
 import Header from './middleware/header';
+import ErrorHandler from './middleware/error-handler';
 
 import logger from './utils/logger';
 
@@ -30,6 +31,7 @@ app.use(
         parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
     }),
 );
+app.use(ErrorHandler);
 app.use(Header);
 app.use(cors());
 

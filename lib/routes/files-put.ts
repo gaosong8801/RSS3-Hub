@@ -3,29 +3,41 @@ import storage from '../utils/storage';
 import utils from '../utils';
 import { equals } from 'typescript-is';
 import config from '../config';
+import STATE from '../state';
 
 export default async (ctx: Koa.Context) => {
     const contents: RSS3Content[] = ctx.request.body.contents;
 
+    let persona: string;
+
     // type check
     if (!equals<RSS3Content[]>(contents)) {
-        ctx.status = 400;
-        ctx.body = {
-            error: `Type check error.`,
-        };
-        return;
+        utils.thorw(STATE.FILE_TYPE_ERROR, ctx);
     }
 
-    let persona: string;
+    contents.every((content, index) => {
+        // file id check
+        const currentPersona = utils.parseId(content.id).persona;
+        if (index === 0) {
+            if (currentPersona !== content.id) {
+                utils.thorw(STATE.FILE_ID_ERROR, ctx);
+            }
+            persona = currentPersona;
+        } else {
+            if (persona !== currentPersona) {
+                if (currentPersona !== content.id) {
+                    utils.thorw(STATE.FILE_ID_ERROR, ctx);
+                }
+            } else if (contents[index - 1].items_next !== content.id) {
+                if (currentPersona !== content.id) {
+                    utils.thorw(STATE.FILE_ID_ERROR, ctx);
+                }
+            }
+        }
+    });
+
     // signature check
     const signatureCheck = contents.every((content) => {
-        const fileID = content.id;
-        const currentPersona = utils.parseId(fileID).persona;
-        if (!persona) {
-            persona = currentPersona;
-        } else if (persona !== currentPersona) {
-            return false;
-        }
         if (!utils.signature.check(content, persona)) {
             return false;
         }
