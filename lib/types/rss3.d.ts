@@ -4,7 +4,7 @@ type RSS3ItemsID = string;
 type RSS3ListID = string;
 type ThirdPartyAddress = string[];
 
-type RSS3Content = RSS3Index | RSS3Items | RSS3List;
+type RSS3Content = RSS3Index | RSS3Items;
 
 // Common attributes for each files
 interface RSS3Base {

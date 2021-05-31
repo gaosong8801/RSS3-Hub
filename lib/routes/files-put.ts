@@ -1,7 +1,6 @@
 import type Koa from 'koa';
 import storage from '../utils/storage';
 import utils from '../utils';
-import EthCrypto from 'eth-crypto';
 import { equals } from 'typescript-is';
 import config from '../config';
 
@@ -27,26 +26,18 @@ export default async (ctx: Koa.Context) => {
         } else if (persona !== currentPersona) {
             return false;
         }
-        const signer = EthCrypto.recover(
-            content.signature,
-            utils.signature.hash(content),
-        );
-        if (signer !== persona) {
+        if (!utils.signature.check(content, persona)) {
             return false;
         }
-        if ((<RSS3Index | RSS3Items>content).items) {
-            return (<RSS3Index | RSS3Items>content).items.every((item) => {
-                const signer = EthCrypto.recover(
-                    item.signature,
-                    utils.signature.hash(item),
-                );
-                if (signer !== persona) {
-                    return false;
-                } else {
-                    return true;
-                }
-            });
+        if (
+            (<RSS3Index>content).profile &&
+            !utils.signature.check((<RSS3Index>content).profile, persona)
+        ) {
+            return false;
         }
+        return content.items.every((item) =>
+            utils.signature.check(item, persona),
+        );
     });
     if (!signatureCheck) {
         ctx.status = 400;
@@ -61,9 +52,7 @@ export default async (ctx: Koa.Context) => {
     );
     let items: RSS3Item[] = [];
     sorted.forEach((content) => {
-        if ((<RSS3Index | RSS3Items>content).items) {
-            items = items.concat((<RSS3Index | RSS3Items>content).items);
-        }
+        items = items.concat(content.items);
     });
     // ID order check
     const idOrderCheck = items.every((item, index) => {

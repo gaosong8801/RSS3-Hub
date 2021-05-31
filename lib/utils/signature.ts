@@ -25,14 +25,17 @@ function obj2Array(obj: AnyObject): mulripleStringArray[] {
         });
 }
 
+function hash(obj: AnyObject) {
+    let message = obj2Array(removeNotSignProperties(obj));
+    return EthCrypto.hash.keccak256(JSON.stringify(message));
+}
+
 export default {
-    hash(source: AnyObject | string) {
-        let message;
-        if (typeof source === 'object') {
-            message = obj2Array(removeNotSignProperties(source));
-        } else if (typeof source === 'string') {
-            message = source;
+    check(obj: AnyObject, persona: string) {
+        if (!obj.signature) {
+            return false;
+        } else {
+            return EthCrypto.recover(obj.signature, hash(obj)) === persona;
         }
-        return EthCrypto.hash.keccak256(JSON.stringify(message));
     },
 };

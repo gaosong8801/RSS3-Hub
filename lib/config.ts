@@ -2,8 +2,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export default {
-    itemPageSize: 20,
-    listPageSize: 2000,
+    itemPageSize: 100,
+    listPageSize: Infinity, // TODO
     maxValueLength: 280,
     storage: {
         type: process.env.STORAGE_TYPE || 'local',
