@@ -12,7 +12,7 @@ interface IRSS3Base {
     '@version': 'rss3.io/version/v0.1.0';
     date_created: string;
     date_updated: string;
-    signature?: string;
+    signature: string;
 }
 
 // Entrance, IRSS3 file
@@ -29,7 +29,7 @@ interface IRSS3 extends IRSS3Base {
         tags?: string[];
         list: IRSS3ID[];
         list_next?: IRSS3ListID;
-        signature?: string;
+        signature: string;
     }[];
     '@backlinks'?: {
         type: string;
@@ -87,7 +87,7 @@ interface IRSS3Item {
         list_next?: IRSS3ListID;
     }[];
 
-    signature?: string;
+    signature: string;
 }
 
 interface IRSS3Profile {
@@ -95,5 +95,5 @@ interface IRSS3Profile {
     avatar?: ThirdPartyAddress;
     bio?: string;
     tags?: string[];
-    signature?: string;
+    signature: string;
 }

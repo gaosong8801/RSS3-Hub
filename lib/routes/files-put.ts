@@ -1,6 +1,6 @@
 import type Koa from 'koa';
 import storage from '../utils/storage';
-import sign from '../utils/sign';
+import utils from '../utils';
 import EthCrypto from 'eth-crypto';
 import { equals } from 'typescript-is';
 import config from '../config';
@@ -26,22 +26,18 @@ export default async (ctx: Koa.Context) => {
         } else if (persona !== fileID.split('-')[0]) {
             return false;
         }
-        const message = JSON.stringify(sign.removeNotSignProperties(content));
         const signer = EthCrypto.recover(
             content.signature,
-            EthCrypto.hash.keccak256(message),
+            utils.signature.hash(content),
         );
         if (signer !== persona) {
             return false;
         }
         if ((<IRSS3 | IRSS3Items>content).items) {
             return (<IRSS3 | IRSS3Items>content).items.every((item) => {
-                const message = JSON.stringify(
-                    sign.removeNotSignProperties(item),
-                );
                 const signer = EthCrypto.recover(
                     item.signature,
-                    EthCrypto.hash.keccak256(message),
+                    utils.signature.hash(item),
                 );
                 if (signer !== persona) {
                     return false;
