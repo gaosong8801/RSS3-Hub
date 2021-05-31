@@ -8,9 +8,9 @@ A centralized implementation of [RSS3](https://github.com/NaturalSelectionLabs/R
 
 ## API
 
--   GET `/files/:fid` - get a file
+-   GET `/:fid` - get a file
 
--   PUT `/files` - change a file
+-   PUT `/` - change a file
 
 Body parameters
 
@@ -18,7 +18,7 @@ Body parameters
 | -------- | -------- | -------------------------- |
 | contents | false    | array of contents' objects |
 
--   DELETE `/files` - delete a file
+-   DELETE `/` - delete a persona
 
 Body parameters
 

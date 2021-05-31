@@ -38,9 +38,9 @@ app.use(cors());
 // router
 const router = new Router();
 
-router.get('/files/:fid', FilesGet);
-router.put('/files', FilesPut);
-router.delete('/files', FilesDelete);
+router.get('/:fid', FilesGet);
+router.put('/', FilesPut);
+router.delete('/', FilesDelete);
 
 app.use(router.routes()).use(router.allowedMethods());
 
