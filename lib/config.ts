@@ -5,6 +5,7 @@ export default {
     itemPageSize: 100,
     listPageSize: Infinity, // TODO
     maxValueLength: 280,
+    maxDateGap: 2 * 60 * 60 * 1000,
     storage: {
         type: process.env.STORAGE_TYPE || 'local',
         path: 'storage/',
