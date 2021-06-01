@@ -7,7 +7,6 @@ export default {
     maxValueLength: 280,
     maxDateGap: 2 * 60 * 60 * 1000,
     storage: {
-        type: process.env.STORAGE_TYPE || 'local',
         path: 'storage/',
         spacesName: process.env.SPACES_NAME,
         spacesEndPoint: process.env.SPACES_ENDPOINT,
