@@ -53,15 +53,20 @@ export default {
 
                 if (list.list.length >= config.listPageSize) {
                     const newListId = id.addIndex(listId);
-                    storage.write({
+                    const newContent: RSS3List = {
                         id: newListId,
                         '@version': 'rss3.io/version/v0.1.0',
                         date_updated: now,
                         date_created: now,
 
                         list: list.list,
-                    });
+                    };
+                    if (list.list_next) {
+                        newContent.list_next = list.list_next;
+                    }
+                    storage.write(newContent);
                     list.list = [item.id];
+                    list.list_next = newListId;
                     list.date_updated = now;
                     storage.write(list);
                 } else {
