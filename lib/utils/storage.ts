@@ -31,7 +31,7 @@ export default {
         });
     },
     exist: async (id: string) => {
-        return <Promise<boolean>>new Promise(async (resolve) => {
+        return new Promise<boolean>(async (resolve) => {
             let result = true;
             try {
                 await s3
@@ -65,7 +65,7 @@ export default {
             .promise();
     },
     list: async (prefix: string) => {
-        return <Promise<string[]>>new Promise(async (resolve) => {
+        return new Promise<string[]>(async (resolve) => {
             const data = await s3
                 .listObjectsV2(
                     {
