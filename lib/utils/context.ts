@@ -40,7 +40,7 @@ export default {
                 upItem['@contexts'].push(context);
                 list = {
                     id: listId,
-                    '@version': 'rss3.io/version/v0.1.0',
+                    '@version': config.version,
                     date_updated: now,
                     date_created: now,
 
@@ -55,7 +55,7 @@ export default {
                     const newListId = id.addIndex(listId);
                     const newContent: RSS3List = {
                         id: newListId,
-                        '@version': 'rss3.io/version/v0.1.0',
+                        '@version': config.version,
                         date_updated: now,
                         date_created: now,
 
