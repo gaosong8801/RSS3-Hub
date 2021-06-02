@@ -101,6 +101,9 @@ export default {
                     return false;
                 }
                 list.list.splice(index, 1);
+                if (list.list.length === 0) {
+                    delete list.list_next;
+                }
                 list.date_updated = now;
                 storage.write(list);
             }
