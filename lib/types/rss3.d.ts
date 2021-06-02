@@ -12,12 +12,12 @@ interface RSS3Base {
     '@version': 'rss3.io/version/v0.1.0';
     date_created: string;
     date_updated: string;
-    signature: string;
 }
 
 // Entrance, RSS3 file
 interface RSS3Index extends RSS3Base {
     id: RSS3ID;
+    signature: string;
 
     profile?: RSS3Profile;
 
@@ -28,13 +28,11 @@ interface RSS3Index extends RSS3Base {
         type: string;
         tags?: string[];
         list: RSS3ID[];
-        list_next?: RSS3ListID;
         signature: string;
     }[];
     '@backlinks'?: {
         type: string;
-        list: RSS3ID[];
-        list_next?: RSS3ListID;
+        list: RSS3ListID;
     }[];
 
     assets?: {
@@ -47,6 +45,7 @@ interface RSS3Index extends RSS3Base {
 // RSS3Items file
 interface RSS3Items extends RSS3Base {
     id: RSS3ItemsID;
+    signature: string;
 
     items: RSS3Item[];
     items_next?: RSS3ItemsID;
@@ -83,8 +82,7 @@ interface RSS3Item {
 
     '@contexts'?: {
         type?: string;
-        list: RSS3ItemID[];
-        list_next?: RSS3ListID;
+        list: RSS3ListID;
     }[];
 
     signature: string;

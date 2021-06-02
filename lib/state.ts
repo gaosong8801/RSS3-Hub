@@ -15,6 +15,7 @@ export default class STATE {
     static readonly ITEMS_ID_ERROR = 4002;
     static readonly ITEMS_LENGTH_ERROR = 4003;
     static readonly ITEMS_DATE_ERROR = 4004;
+    static readonly ITEMS_UPSTREAM_ERROR = 4005;
 
     // 错误提示信息
     static readonly ERROR_MESSAGES = {
@@ -33,5 +34,6 @@ export default class STATE {
         4002: 'Items id error',
         4003: 'Items length error',
         4004: 'Items date error',
+        4005: 'Items upstream error',
     };
 }

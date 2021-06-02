@@ -11,6 +11,7 @@ export default async (ctx: Koa.Context) => {
     let itemIndex: number;
     let nextIndex: number;
     const now = +new Date();
+    let oldItems: RSS3Item[] = [];
 
     // type check
     if (!equals<RSS3Content[]>(contents)) {
@@ -53,13 +54,22 @@ export default async (ctx: Koa.Context) => {
             }
         }
 
+        if (await utils.storage.exist(content.id)) {
+            old = <RSS3Content>JSON.parse(await utils.storage.read(content.id));
+            oldItems = oldItems.concat(old.items);
+        }
+
         if (index === 0) {
             persona = idParsed.persona;
 
-            if (await utils.storage.exist(content.id)) {
-                old = JSON.parse(await utils.storage.read(content.id));
-                // file next check
+            if (old) {
+                // file date check
+                if (content.date_created !== old.date_created) {
+                    utils.thorw(STATE.FILE_DATE_ERROR, ctx);
+                }
+
                 if (isIndex) {
+                    // file next check
                     if (
                         old.items_next !==
                         contents[contents.length - 1].items_next
@@ -121,9 +131,6 @@ export default async (ctx: Koa.Context) => {
         ) {
             utils.thorw(STATE.FILE_DATE_ERROR, ctx);
         }
-        if (+new Date(content.date_created) > +new Date(content.date_updated)) {
-            utils.thorw(STATE.FILE_DATE_ERROR, ctx);
-        }
 
         content.items.forEach((item) => {
             // items id check
@@ -182,11 +189,27 @@ export default async (ctx: Koa.Context) => {
         }
     });
 
-    contents.forEach(async (content) => {
-        await utils.storage.write(content.id, JSON.stringify(content));
+    contents.forEach((content) => {
+        utils.storage.write(content.id, JSON.stringify(content));
     });
 
     // contexts
+    contents.forEach(async (content) => {
+        content.items.forEach((item) => {
+            const old = oldItems.find((oldItem) => oldItem.id === item.id);
+            if (item.upstream) {
+                if (old?.upstream && old.upstream !== item.upstream) {
+                    utils.context.add(item);
+                    // utils.context.remove(old);
+                } else if (!old?.upstream) {
+                    utils.context.add(item);
+                }
+            } else if (old?.upstream) {
+                // utils.context.remove(old);
+            }
+        });
+    });
+
     // let newItems = items;
     // if (oldContent) {
     //     const newItemsLength =
