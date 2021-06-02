@@ -21,7 +21,7 @@ export default async (ctx: Koa.Context) => {
     contents.forEach(async (content, index) => {
         let old;
         const idParsed = utils.id.parse(content.id);
-        const isIndex = !idParsed.type;
+        const isIndex = idParsed.type === 'index';
 
         // file id check
         if (!isIndex) {

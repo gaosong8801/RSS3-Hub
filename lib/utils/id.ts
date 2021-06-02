@@ -2,8 +2,8 @@ function parse(id: string) {
     const splited = id.split('-');
     return {
         persona: splited[0],
-        type: splited[1],
-        index: parseInt(splited[2]),
+        type: splited[1] || 'index',
+        index: parseInt(splited[2] ?? '-1'),
     };
 }
 
