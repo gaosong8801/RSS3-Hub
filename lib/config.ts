@@ -3,7 +3,7 @@ dotenv.config();
 
 export default {
     itemPageSize: 100,
-    listPageSize: Infinity, // TODO
+    listPageSize: 5000,
     maxValueLength: 280,
     maxDateGap: 2 * 60 * 60 * 1000,
     storage: {
