@@ -55,7 +55,7 @@ interface RSS3Items extends RSS3Base {
 interface RSS3List extends RSS3Base {
     id: RSS3ListID;
 
-    list: RSS3ID[] | RSS3ItemID[];
+    list?: RSS3ID[] | RSS3ItemID[];
     list_next?: RSS3ListID;
 }
 

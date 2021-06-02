@@ -199,12 +199,12 @@ export default async (ctx: Koa.Context) => {
             if (item.upstream) {
                 if (old?.upstream && old.upstream !== item.upstream) {
                     utils.context.add(item);
-                    // utils.context.remove(old);
+                    utils.context.remove(old);
                 } else if (!old?.upstream) {
                     utils.context.add(item);
                 }
             } else if (old?.upstream) {
-                // utils.context.remove(old);
+                utils.context.remove(old);
             }
         });
     });
