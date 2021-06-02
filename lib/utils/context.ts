@@ -18,7 +18,7 @@ export default {
                     return false;
                 }
             }
-            const up = <RSS3Content>JSON.parse(await storage.read(fileId));
+            const up = <RSS3IContent>await storage.read(fileId);
             const upItem = up.items.find((i) => i.id === item.id);
             if (!upItem) {
                 return false;
@@ -46,32 +46,29 @@ export default {
 
                     list: [item.id],
                 };
-                storage.write(fileId, JSON.stringify(up));
-                storage.write(listId, JSON.stringify(list));
+                storage.write(up);
+                storage.write(list);
             } else {
-                list = JSON.parse(await storage.read(listId));
+                list = await storage.read(listId);
 
                 if (list.list.length >= config.listPageSize) {
                     const newListId = id.addIndex(listId);
-                    storage.write(
-                        newListId,
-                        JSON.stringify(<RSS3List>{
-                            id: newListId,
-                            '@version': 'rss3.io/version/v0.1.0',
-                            date_updated: now,
-                            date_created: now,
+                    storage.write({
+                        id: newListId,
+                        '@version': 'rss3.io/version/v0.1.0',
+                        date_updated: now,
+                        date_created: now,
 
-                            list: list.list,
-                        }),
-                    );
+                        list: list.list,
+                    });
                     list.list = [item.id];
                     list.date_updated = now;
-                    storage.write(listId, JSON.stringify(list));
+                    storage.write(list);
                 } else {
                     list.list.push(item.id);
                     list.date_updated = now;
 
-                    storage.write(listId, JSON.stringify(list));
+                    storage.write(list);
                 }
             }
         }
@@ -89,7 +86,7 @@ export default {
                 let list: RSS3List;
                 let index;
                 do {
-                    list = JSON.parse(await storage.read(listId));
+                    list = await storage.read(listId);
                     index = list.list
                         ? list.list.findIndex((i) => i === item.id)
                         : -1;
@@ -100,7 +97,7 @@ export default {
                 }
                 list.list.splice(index, 1);
                 list.date_updated = now;
-                storage.write(list.id, JSON.stringify(list));
+                storage.write(list);
             }
         }
     },

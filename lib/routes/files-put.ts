@@ -5,7 +5,7 @@ import config from '../config';
 import STATE from '../state';
 
 export default async (ctx: Koa.Context) => {
-    const contents: RSS3Content[] = ctx.request.body.contents;
+    const contents: RSS3IContent[] = ctx.request.body.contents;
 
     let persona: string;
     let itemIndex: number;
@@ -14,12 +14,12 @@ export default async (ctx: Koa.Context) => {
     let oldItems: RSS3Item[] = [];
 
     // type check
-    if (!equals<RSS3Content[]>(contents)) {
+    if (!equals<RSS3IContent[]>(contents)) {
         utils.thorw(STATE.FILE_TYPE_ERROR, ctx);
     }
 
     contents.forEach(async (content, index) => {
-        let old;
+        let old: RSS3IContent;
         const idParsed = utils.id.parse(content.id);
         const isIndex = idParsed.type === 'index';
 
@@ -55,7 +55,7 @@ export default async (ctx: Koa.Context) => {
         }
 
         if (await utils.storage.exist(content.id)) {
-            old = <RSS3Content>JSON.parse(await utils.storage.read(content.id));
+            old = <RSS3IContent>await utils.storage.read(content.id);
             oldItems = oldItems.concat(old.items);
         }
 
@@ -189,7 +189,7 @@ export default async (ctx: Koa.Context) => {
     });
 
     contents.forEach((content) => {
-        utils.storage.write(content.id, JSON.stringify(content));
+        utils.storage.write(content);
     });
 
     // contexts
@@ -208,47 +208,6 @@ export default async (ctx: Koa.Context) => {
             }
         });
     });
-
-    // let newItems = items;
-    // if (oldContent) {
-    //     const newItemsLength =
-    //         utils.parseId(items[0].id).index -
-    //         utils.parseId(oldContent.items[0].id).index;
-    //     newItems = items.slice(0, newItemsLength);
-    // }
-    // for (const newItem of newItems) {
-    //     if (newItem.upstream) {
-    //         const upstreamPersona = utils.parseId(newItem.upstream).persona;
-    //         const upstreamIndex = utils.parseId(newItem.upstream).index;
-    //         let fileID =
-    //             upstreamPersona +
-    //             '-items-' +
-    //             Math.ceil(upstreamIndex / config.itemPageSize);
-    //         if (!(await utils.storage.exist(fileID))) {
-    //             fileID = upstreamPersona;
-    //         }
-    //         const upstreamContent: RSS3Index | RSS3Items = JSON.parse(
-    //             await utils.storage.read(fileID),
-    //         );
-    //         const index =
-    //             config.itemPageSize - 1 - (upstreamIndex % config.itemPageSize);
-    //         if (!upstreamContent.items[index]['@contexts']) {
-    //             upstreamContent.items[index]['@contexts'] = [];
-    //         }
-    //         let typeContext = upstreamContent.items[index]['@contexts'].find(
-    //             (context) => context.type === newItem.type,
-    //         );
-    //         if (!typeContext) {
-    //             typeContext = {
-    //                 type: newItem.type,
-    //                 list: [],
-    //             };
-    //             upstreamContent.items[index]['@contexts'].push(typeContext);
-    //         }
-    //         typeContext.list.push(newItem.id);
-    //         await utils.storage.write(fileID, JSON.stringify(upstreamContent));
-    //     }
-    // }
 
     ctx.body = contents.map((content) => content.id);
 };

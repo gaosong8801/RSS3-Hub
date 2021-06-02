@@ -11,33 +11,33 @@ s3 = new AWS.S3({
 });
 
 export default {
-    write: async (name: string, content: string) => {
+    write: async (content: RSS3Content) => {
         s3.putObject({
             Bucket: config.storage.spacesName,
-            Key: config.storage.path + name,
-            Body: content,
+            Key: config.storage.path + content.id,
+            Body: JSON.stringify(content),
             ACL: 'public-read',
         }).promise();
     },
-    read: async (name: string) => {
-        return <Promise<string>>new Promise(async (resolve) => {
+    read: async (id: string) => {
+        return new Promise<RSS3Content>(async (resolve) => {
             const data = await s3
                 .getObject({
                     Bucket: config.storage.spacesName,
-                    Key: config.storage.path + name,
+                    Key: config.storage.path + id,
                 })
                 .promise();
-            resolve(data.Body.toString());
+            resolve(JSON.parse(data.Body.toString()));
         });
     },
-    exist: async (name: string) => {
+    exist: async (id: string) => {
         return <Promise<boolean>>new Promise(async (resolve) => {
             let result = true;
             try {
                 await s3
                     .headObject({
                         Bucket: config.storage.spacesName,
-                        Key: config.storage.path + name,
+                        Key: config.storage.path + id,
                     })
                     .promise();
             } catch (headErr) {
