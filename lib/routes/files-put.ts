@@ -20,7 +20,7 @@ export default async (ctx: Koa.Context) => {
 
     contents.forEach(async (content, index) => {
         let old;
-        const idParsed = utils.check.parseId(content.id);
+        const idParsed = utils.id.parse(content.id);
         const isIndex = !idParsed.type;
 
         // file id check
@@ -36,7 +36,7 @@ export default async (ctx: Koa.Context) => {
 
         // file next check
         if (content.items_next) {
-            const nextIdParsed = utils.check.parseId(content.items_next);
+            const nextIdParsed = utils.id.parse(content.items_next);
             if (!utils.check.idFormat(content.items_next, 'items')) {
                 utils.thorw(STATE.FILE_NEXT_ERROR, ctx);
             }
@@ -84,8 +84,8 @@ export default async (ctx: Koa.Context) => {
 
                 // items id check
                 if (
-                    utils.check.parseId(content.items[0].id).index <
-                    utils.check.parseId(old.items[0].id).index
+                    utils.id.parse(content.items[0].id).index <
+                    utils.id.parse(old.items[0].id).index
                 ) {
                     utils.thorw(STATE.ITEMS_ID_ERROR, ctx);
                 }
@@ -134,7 +134,7 @@ export default async (ctx: Koa.Context) => {
 
         content.items.forEach((item) => {
             // items id check
-            const itemIdParsed = utils.check.parseId(item.id);
+            const itemIdParsed = utils.id.parse(item.id);
             const index = itemIdParsed.index;
             if (itemIndex) {
                 if (index !== itemIndex - 1) {
@@ -160,14 +160,13 @@ export default async (ctx: Koa.Context) => {
         let page = idParsed.index;
         if (!page) {
             if (content.items_next) {
-                page = utils.check.parseId(content.items_next).index + 1;
+                page = utils.id.parse(content.items_next).index + 1;
             } else {
                 page = 0;
             }
         }
         if (
-            utils.check.parseId(content.items[content.items.length - 1].id)
-                .index !==
+            utils.id.parse(content.items[content.items.length - 1].id).index !==
             page * config.itemPageSize
         ) {
             utils.thorw(STATE.ITEMS_ID_ERROR, ctx);

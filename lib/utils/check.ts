@@ -1,4 +1,5 @@
 import config from '../config';
+import utilsId from './id';
 
 function valueLength(obj: AnyObject) {
     let result = true;
@@ -14,21 +15,11 @@ function valueLength(obj: AnyObject) {
     return result;
 }
 
-function parseId(id: string) {
-    const splited = id.split('-');
-    return {
-        persona: splited[0],
-        type: splited[1],
-        index: parseInt(splited[2]),
-    };
-}
-
 export default {
     valueLength,
-    parseId,
 
     idFormat(id: string, type?: string) {
-        const parsed = parseId(id);
+        const parsed = utilsId.parse(id);
         if (!type) {
             return parsed.persona == id;
         } else {

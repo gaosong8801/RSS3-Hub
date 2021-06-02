@@ -1,4 +1,3 @@
-import check from './check';
 import config from '../config';
 import storage from './storage';
 import id from './id';
@@ -6,7 +5,7 @@ import id from './id';
 export default {
     add: async (item: RSS3Item) => {
         if (item.upstream) {
-            const parsed = check.parseId(item.upstream);
+            const parsed = id.parse(item.upstream);
             let fileId =
                 parsed.persona +
                 '-items-' +
