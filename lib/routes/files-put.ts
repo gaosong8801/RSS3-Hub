@@ -56,7 +56,7 @@ export default async (ctx: Koa.Context) => {
 
         if (await utils.storage.exist(content.id)) {
             old = <RSS3IContent>await utils.storage.read(content.id);
-            oldItems = oldItems.concat(old.items);
+            oldItems = oldItems.concat(old.items || []);
         }
 
         if (index === 0) {
@@ -83,11 +83,17 @@ export default async (ctx: Koa.Context) => {
                 }
 
                 // items id check
-                if (
-                    utils.id.parse(content.items[0].id).index <
-                    utils.id.parse(old.items[0].id).index
-                ) {
-                    utils.thorw(STATE.ITEMS_ID_ERROR, ctx);
+                if (old.items?.[0]) {
+                    if (!content.items?.[0]) {
+                        utils.thorw(STATE.ITEMS_ID_ERROR, ctx);
+                    } else {
+                        if (
+                            utils.id.parse(content.items[0].id).index <
+                            utils.id.parse(old.items[0].id).index
+                        ) {
+                            utils.thorw(STATE.ITEMS_ID_ERROR, ctx);
+                        }
+                    }
                 }
             } else {
                 // file id check
@@ -119,10 +125,58 @@ export default async (ctx: Koa.Context) => {
         ) {
             utils.thorw(STATE.PROFILE_SIG_ERROR, ctx);
         }
-        if (
-            !content.items.every((item) => utils.signature.check(item, persona))
-        ) {
-            utils.thorw(STATE.ITEMS_SIG_ERROR, ctx);
+        if (content.items) {
+            if (
+                !content.items.every((item) =>
+                    utils.signature.check(item, persona),
+                )
+            ) {
+                utils.thorw(STATE.ITEMS_SIG_ERROR, ctx);
+            }
+
+            content.items.forEach((item) => {
+                // items id check
+                const itemIdParsed = utils.id.parse(item.id);
+                const index = itemIdParsed.index;
+                if (itemIndex) {
+                    if (index !== itemIndex - 1) {
+                        utils.thorw(STATE.ITEMS_ID_ERROR, ctx);
+                    }
+                }
+                itemIndex = index;
+
+                utils.check.idFormat(item.id, 'item');
+
+                // items date check
+                if (
+                    +new Date(item.date_modified) >
+                    +new Date(content.date_updated)
+                ) {
+                    utils.thorw(STATE.ITEMS_DATE_ERROR, ctx);
+                }
+                if (
+                    +new Date(item.date_modified) <
+                    +new Date(item.date_published)
+                ) {
+                    utils.thorw(STATE.ITEMS_DATE_ERROR, ctx);
+                }
+            });
+
+            let page = idParsed.index;
+            if (!page) {
+                if (content.items_next) {
+                    page = utils.id.parse(content.items_next).index + 1;
+                } else {
+                    page = 0;
+                }
+            }
+            if (
+                utils.id.parse(content.items[content.items.length - 1].id)
+                    .index !==
+                page * config.itemPageSize
+            ) {
+                utils.thorw(STATE.ITEMS_ID_ERROR, ctx);
+            }
         }
 
         // file date check
@@ -132,53 +186,16 @@ export default async (ctx: Koa.Context) => {
             utils.thorw(STATE.FILE_DATE_ERROR, ctx);
         }
 
-        content.items.forEach((item) => {
-            // items id check
-            const itemIdParsed = utils.id.parse(item.id);
-            const index = itemIdParsed.index;
-            if (itemIndex) {
-                if (index !== itemIndex - 1) {
-                    utils.thorw(STATE.ITEMS_ID_ERROR, ctx);
-                }
-            }
-            itemIndex = index;
-
-            utils.check.idFormat(item.id, 'item');
-
-            // items date check
-            if (
-                +new Date(item.date_modified) > +new Date(content.date_updated)
-            ) {
-                utils.thorw(STATE.ITEMS_DATE_ERROR, ctx);
-            }
-            if (
-                +new Date(item.date_modified) < +new Date(item.date_published)
-            ) {
-                utils.thorw(STATE.ITEMS_DATE_ERROR, ctx);
-            }
-        });
-        let page = idParsed.index;
-        if (!page) {
-            if (content.items_next) {
-                page = utils.id.parse(content.items_next).index + 1;
-            } else {
-                page = 0;
-            }
-        }
-        if (
-            utils.id.parse(content.items[content.items.length - 1].id).index !==
-            page * config.itemPageSize
-        ) {
-            utils.thorw(STATE.ITEMS_ID_ERROR, ctx);
-        }
-
         // items length check
         if (!isIndex) {
-            if (content.items.length !== config.itemPageSize) {
+            if (
+                !content.items ||
+                content.items.length !== config.itemPageSize
+            ) {
                 utils.thorw(STATE.ITEMS_LENGTH_ERROR, ctx);
             }
         } else {
-            if (content.items.length > config.itemPageSize) {
+            if (content.items && content.items.length > config.itemPageSize) {
                 utils.thorw(STATE.ITEMS_LENGTH_ERROR, ctx);
             }
         }
@@ -194,7 +211,7 @@ export default async (ctx: Koa.Context) => {
 
     // contexts
     contents.forEach(async (content) => {
-        content.items.forEach((item) => {
+        content.items?.forEach((item) => {
             const old = oldItems.find((oldItem) => oldItem.id === item.id);
             if (item.upstream) {
                 if (old?.upstream && old.upstream !== item.upstream) {
