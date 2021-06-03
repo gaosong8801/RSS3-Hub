@@ -3,7 +3,7 @@ function parse(id: string) {
     return {
         persona: splited[0],
         type: splited[1] || 'index',
-        index: parseInt(splited[2] ?? '-1'),
+        index: splited[2] !== undefined ? parseInt(splited[2]) : Infinity,
     };
 }
 

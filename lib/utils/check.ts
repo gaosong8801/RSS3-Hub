@@ -23,7 +23,7 @@ export default {
         if (parsed.type !== type) {
             return false;
         }
-        if (parsed.type !== 'index' && parsed.index === -1) {
+        if (parsed.type !== 'index' && parsed.index === Infinity) {
             return false;
         }
         if (`${parsed.persona}-${type}-${parsed.index}` !== id) {

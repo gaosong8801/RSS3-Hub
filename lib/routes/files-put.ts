@@ -5,7 +5,7 @@ import config from '../config';
 import STATE from '../state';
 
 export default async (ctx: Koa.Context) => {
-    const contents: RSS3IContent[] = ctx.request.body.contents;
+    let contents: RSS3IContent[] = ctx.request.body.contents;
 
     let persona: string;
     let itemIndex: number;
@@ -17,6 +17,9 @@ export default async (ctx: Koa.Context) => {
     if (!equals<RSS3IContent[]>(contents)) {
         utils.thorw(STATE.FILE_TYPE_ERROR, ctx);
     }
+    contents = contents.sort(
+        (a, b) => utils.id.parse(b.id).index - utils.id.parse(a.id).index,
+    );
     await Promise.all(
         contents.map(async (content, index) => {
             let old: RSS3IContent;
@@ -163,7 +166,7 @@ export default async (ctx: Koa.Context) => {
                 });
 
                 let page = idParsed.index;
-                if (page === -1) {
+                if (page === Infinity) {
                     if (content.items_next) {
                         page = utils.id.parse(content.items_next).index + 1;
                     } else {
