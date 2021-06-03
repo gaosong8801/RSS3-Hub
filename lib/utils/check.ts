@@ -18,21 +18,17 @@ function valueLength(obj: AnyObject) {
 export default {
     valueLength,
 
-    idFormat(id: string, type?: string) {
+    idFormat(id: string, type: string) {
         const parsed = utilsId.parse(id);
-        if (!type) {
-            return parsed.persona == id;
-        } else {
-            if (parsed.type !== type) {
-                return false;
-            }
-            if (Number.isNaN(parsed.index)) {
-                return false;
-            }
-            if (`${parsed.persona}-${type}-${parsed.index}` !== id) {
-                return false;
-            }
-            return true;
+        if (parsed.type !== type) {
+            return false;
         }
+        if (parsed.type !== 'index' && parsed.index === -1) {
+            return false;
+        }
+        if (`${parsed.persona}-${type}-${parsed.index}` !== id) {
+            return false;
+        }
+        return true;
     },
 };

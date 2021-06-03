@@ -29,7 +29,7 @@ export default async (ctx: Koa.Context) => {
                 utils.thorw(STATE.FILE_ID_ERROR, ctx);
             }
         } else {
-            if (utils.check.idFormat(content.id)) {
+            if (utils.check.idFormat(content.id, 'index')) {
                 utils.thorw(STATE.FILE_ID_ERROR, ctx);
             }
         }
