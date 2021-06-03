@@ -25,13 +25,13 @@ app.on('error', (err, ctx) => {
     };
 });
 
+app.use(ErrorHandler);
 app.use(
     KoaBody({
         includeUnparsed: true,
         parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
     }),
 );
-app.use(ErrorHandler);
 app.use(Header);
 app.use(cors());
 
