@@ -6,7 +6,7 @@ function removeNotSignProperties(obj: AnyObject) {
         if (key[0] === '@' || key === 'signature') {
             delete obj[key];
         } else if (typeof obj[key] === 'object') {
-            this.removeNotSignProperties(obj[key]);
+            removeNotSignProperties(obj[key]);
         }
     }
     return obj;

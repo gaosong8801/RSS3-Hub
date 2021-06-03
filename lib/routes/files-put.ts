@@ -163,7 +163,7 @@ export default async (ctx: Koa.Context) => {
                 });
 
                 let page = idParsed.index;
-                if (!page) {
+                if (page === -1) {
                     if (content.items_next) {
                         page = utils.id.parse(content.items_next).index + 1;
                     } else {
