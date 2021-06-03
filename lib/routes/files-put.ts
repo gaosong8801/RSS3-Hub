@@ -110,7 +110,9 @@ export default async (ctx: Koa.Context) => {
                     utils.thorw(STATE.FILE_NEXT_ERROR, ctx);
                 }
                 // file id check
-                if (persona !== idParsed.persona) {
+                if (
+                    idParsed.persona !== utils.id.parse(contents[0].id).persona
+                ) {
                     utils.thorw(STATE.FILE_ID_ERROR, ctx);
                 }
                 if (!idParsed.type) {
