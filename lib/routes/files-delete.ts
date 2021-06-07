@@ -1,24 +1,28 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
 import EthCrypto from 'eth-crypto';
+import utils from '../utils';
+import STATE from '../state';
+import config from '../config';
 
 export default async (ctx: Koa.Context) => {
     const signature = ctx.request.body.signature;
-    const signer = EthCrypto.recover(
-        signature,
-        EthCrypto.hash.keccak256('delete'),
-    );
+    const date = ctx.request.body.date;
 
-    if (!(await storage.exist(signer))) {
-        ctx.status = 404;
-        ctx.body = {
-            error: 'Not Found.',
-        };
-        return;
+    if (Math.abs(+new Date(date) - +new Date()) > config.maxDateGap) {
+        utils.thorw(STATE.DELETE_DATE_ERROR, ctx);
     }
 
-    const files = await storage.list(signer);
-    await storage.delete(files);
+    const signer = EthCrypto.recover(
+        signature,
+        EthCrypto.hash.keccak256(`Delete my RSS3 persona at ${date}`),
+    );
+
+    if (!(await utils.storage.exist(signer))) {
+        utils.thorw(STATE.DELETE_NOT_FOUND_ERROR, ctx);
+    }
+
+    const files = await utils.storage.list(signer);
+    await utils.storage.delete(files);
 
     ctx.body = files;
 };

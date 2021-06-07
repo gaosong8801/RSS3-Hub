@@ -17,6 +17,11 @@ export default class STATE {
     static readonly ITEMS_DATE_ERROR = 4004;
     static readonly ITEMS_UPSTREAM_ERROR = 4005;
 
+    static readonly DELETE_NOT_FOUND_ERROR = 5001;
+    static readonly DELETE_DATE_ERROR = 5002;
+
+    static readonly GET_NOT_FOUND_ERROR = 6001;
+
     // 错误提示信息
     static readonly ERROR_MESSAGES = {
         1001: 'Unknown error',
@@ -27,6 +32,7 @@ export default class STATE {
         2004: 'File items_next error',
         2005: 'File date error',
         2006: 'File value length error',
+        2007: 'File not found',
 
         3001: 'Profile signature error',
 
@@ -35,5 +41,10 @@ export default class STATE {
         4003: 'Items length error',
         4004: 'Items date error',
         4005: 'Items upstream error',
+
+        5001: 'Persona not found error',
+        5002: 'Date mismatch error',
+
+        6001: 'Persona not found error',
     };
 }

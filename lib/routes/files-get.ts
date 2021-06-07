@@ -1,16 +1,13 @@
 import type Koa from 'koa';
-import storage from '../utils/storage';
+import utils from '../utils';
+import STATE from '../state';
 
 export default async (ctx: Koa.Context) => {
     const fid = ctx.params.fid;
 
-    if (!(await storage.exist(fid))) {
-        ctx.status = 404;
-        ctx.body = {
-            error: 'Not Found.',
-        };
-        return;
+    if (!(await utils.storage.exist(fid))) {
+        utils.thorw(STATE.GET_NOT_FOUND_ERROR, ctx);
     }
 
-    ctx.body = await storage.read(fid);
+    ctx.body = await utils.storage.read(fid);
 };
