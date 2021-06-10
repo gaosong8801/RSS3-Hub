@@ -10,7 +10,6 @@ import logger from './utils/logger';
 
 import FilesGet from './routes/files-get';
 import FilesPut from './routes/files-put';
-import FilesDelete from './routes/files-delete';
 
 process.on('uncaughtException', (e) => {
     logger.error('uncaughtException: ' + e);
@@ -40,7 +39,6 @@ const router = new Router();
 
 router.get('/:fid', FilesGet);
 router.put('/', FilesPut);
-router.delete('/', FilesDelete);
 
 app.use(router.routes()).use(router.allowedMethods());
 

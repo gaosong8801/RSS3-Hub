@@ -17,12 +17,3 @@ Body parameters
 | Name     | Optional | Description                                                                   |
 | -------- | -------- | ----------------------------------------------------------------------------- |
 | contents | false    | array of contents' objects, must be one file or a series of consecutive files |
-
--   DELETE `/` - delete a persona
-
-Body parameters
-
-| Name      | Optional | Description                                                       |
-| --------- | -------- | ----------------------------------------------------------------- |
-| date      | false    | current date in RFC 3339 format, eg: '2021-06-01T00:00:00.000Z'   |
-| signature | false    | signature of string `Delete RSS3 Persona ${personaID} at ${date}` |

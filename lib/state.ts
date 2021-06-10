@@ -17,10 +17,7 @@ export default class STATE {
     static readonly ITEMS_DATE_ERROR = 4004;
     static readonly ITEMS_UPSTREAM_ERROR = 4005;
 
-    static readonly DELETE_NOT_FOUND_ERROR = 5001;
-    static readonly DELETE_DATE_ERROR = 5002;
-
-    static readonly GET_NOT_FOUND_ERROR = 6001;
+    static readonly GET_NOT_FOUND_ERROR = 5001;
 
     // 错误提示信息
     static readonly ERROR_MESSAGES = {
@@ -43,8 +40,5 @@ export default class STATE {
         4005: 'Items upstream error',
 
         5001: 'Persona not found error',
-        5002: 'Date mismatch error',
-
-        6001: 'Persona not found error',
     };
 }

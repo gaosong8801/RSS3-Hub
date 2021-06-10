@@ -48,34 +48,4 @@ export default {
             resolve(result);
         });
     },
-    delete: async (list: string[]) => {
-        return s3
-            .deleteObjects(
-                {
-                    Bucket: config.storage.spacesName,
-                    Delete: {
-                        Objects: list.map((item) => ({
-                            Key: item,
-                        })),
-                        Quiet: false,
-                    },
-                },
-                () => {},
-            )
-            .promise();
-    },
-    list: async (prefix: string) => {
-        return new Promise<string[]>(async (resolve) => {
-            const data = await s3
-                .listObjectsV2(
-                    {
-                        Bucket: config.storage.spacesName,
-                        Prefix: config.storage.path + prefix,
-                    },
-                    () => {},
-                )
-                .promise();
-            resolve(data.Contents.map((content) => content.Key));
-        });
-    },
 };
