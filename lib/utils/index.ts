@@ -1,7 +1,7 @@
 import Koa from 'koa';
 import logger from './logger';
 import storage from './storage';
-import signature from './signature';
+import accounts from './accounts';
 import check from './check';
 import context from './context';
 import id from './id';
@@ -9,7 +9,7 @@ import id from './id';
 export default {
     logger,
     storage,
-    signature,
+    accounts,
     check,
     context,
     id,
