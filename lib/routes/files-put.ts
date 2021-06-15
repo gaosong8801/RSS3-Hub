@@ -6,6 +6,13 @@ import STATE from '../state';
 
 export default async (ctx: Koa.Context) => {
     let contents: RSS3IContent[] = ctx.request.body.contents;
+    if (typeof contents === 'string') {
+        try {
+            contents = JSON.parse(contents);
+        } catch (e) {
+            utils.thorw(STATE.FILE_TYPE_ERROR, ctx);
+        }
+    }
 
     let persona: string;
     let itemIndex: number;
