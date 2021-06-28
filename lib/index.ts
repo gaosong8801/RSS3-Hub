@@ -10,6 +10,8 @@ import logger from './utils/logger';
 
 import FilesGet from './routes/files-get';
 import FilesPut from './routes/files-put';
+import ProfileGet from './routes/profile-get';
+import ItemGet from './routes/item-get';
 
 process.on('uncaughtException', (e) => {
     logger.error('uncaughtException: ' + e);
@@ -39,6 +41,8 @@ const router = new Router();
 
 router.get('/:fid', FilesGet);
 router.put('/', FilesPut);
+router.get('/profile/:personaID', ProfileGet);
+router.get('/item/:itemID', ItemGet);
 
 app.use(router.routes()).use(router.allowedMethods());
 

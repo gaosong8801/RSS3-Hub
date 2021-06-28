@@ -17,3 +17,7 @@ Body parameters
 | Name     | Optional | Description                                                                   |
 | -------- | -------- | ----------------------------------------------------------------------------- |
 | contents | false    | array of contents' objects, must be one file or a series of consecutive files |
+
+-   GET `/profile/:personaID`
+
+-   GET `/item/:itemID`
