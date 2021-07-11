@@ -10,8 +10,12 @@ function parse(id: string) {
 export default {
     parse,
 
-    addIndex: (id: string) => {
-        const parsed = parse(id);
-        return `${parsed.persona}-${parsed.type}-${parsed.index + 1}`;
+    addIndex: (id: string, next: string) => {
+        if (next) {
+            const parsed = parse(next);
+            return `${parsed.persona}-${parsed.type}-${parsed.index + 1}`;
+        } else {
+            return `${id}-0`;
+        }
     },
 };

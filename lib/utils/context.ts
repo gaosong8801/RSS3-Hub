@@ -6,10 +6,7 @@ export default {
     add: async (item: RSS3Item) => {
         if (item.upstream) {
             const parsed = id.parse(item.upstream);
-            let fileId =
-                parsed.persona +
-                '-items-' +
-                Math.ceil(parsed.index / config.itemPageSize);
+            let fileId = parsed.persona + '-items-' + Math.ceil(parsed.index / config.itemPageSize);
             const listId = `${parsed.persona}-context@${parsed.index}@${item.type}`;
 
             if (!(await storage.exist(fileId))) {
@@ -26,9 +23,7 @@ export default {
             if (!upItem['@contexts']) {
                 upItem['@contexts'] = [];
             }
-            let context = upItem['@contexts'].find(
-                (context) => context.type === item.type,
-            );
+            let context = upItem['@contexts'].find((context) => context.type === item.type);
             const now = new Date().toISOString();
             let list: RSS3List;
 
@@ -52,7 +47,7 @@ export default {
                 list = await storage.read(listId);
 
                 if (list.list.length >= config.listPageSize) {
-                    const newListId = id.addIndex(listId);
+                    const newListId = id.addIndex(list.id, list.list_next);
                     const newContent: RSS3List = {
                         id: newListId,
                         '@version': config.version,
@@ -92,9 +87,7 @@ export default {
                 let index;
                 do {
                     list = await storage.read(listId);
-                    index = list.list
-                        ? list.list.findIndex((i) => i === item.id)
-                        : -1;
+                    index = list.list ? list.list.findIndex((i) => i === item.id) : -1;
                     listId = list.list_next;
                 } while (index !== -1 || !listId);
                 if (index === -1) {
