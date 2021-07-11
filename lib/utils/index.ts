@@ -5,6 +5,7 @@ import accounts from './accounts';
 import check from './check';
 import context from './context';
 import id from './id';
+import backlinks from './backlinks';
 
 export default {
     logger,
@@ -13,6 +14,7 @@ export default {
     check,
     context,
     id,
+    backlinks,
 
     thorw: (code: number, ctx: Koa.Context) => {
         ctx.throw(400, null, {

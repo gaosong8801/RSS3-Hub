@@ -190,8 +190,8 @@ export default async (ctx: Koa.Context) => {
         utils.storage.write(content);
     });
 
-    // contexts
-    contents.forEach((content) => {
+    contents.forEach(async (content) => {
+        // contexts
         content.items?.forEach((item) => {
             const old = oldItems.find((oldItem) => oldItem.id === item.id);
             if (item.upstream) {
@@ -205,6 +205,54 @@ export default async (ctx: Koa.Context) => {
                 utils.context.remove(old);
             }
         });
+
+        // backlinks
+        const addLinks: RSS3LinksInput[] = [];
+        const removeLinks: RSS3LinksInput[] = [];
+        if ((<RSS3Index>content).links) {
+            const links = (<RSS3Index>content).links;
+            let oldLinks: RSS3Links[];
+            try {
+                oldLinks = (<RSS3Index>await utils.storage.read(content.id)).links;
+            } catch (e) {}
+            links.forEach((lks) => {
+                const oldLks = oldLinks?.find((oldLks) => oldLks.type === lks.type);
+                if (oldLks) {
+                    const newList = lks.list?.filter((link) => oldLks.list.indexOf(link) === -1);
+                    if (newList && newList.length) {
+                        addLinks.push({
+                            type: lks.type,
+                            list: newList,
+                        });
+                    }
+                    const lostList = oldLks.list?.filter((link) => lks.list.indexOf(link) === -1);
+                    if (lostList && lostList.length) {
+                        removeLinks.push({
+                            type: lks.type,
+                            list: lostList,
+                        });
+                    }
+                } else {
+                    addLinks.push(lks);
+                }
+            });
+            oldLinks.forEach((oldLks) => {
+                const lks = links?.find((lks) => lks.type === oldLks.type);
+                if (!lks) {
+                    removeLinks.push(oldLks);
+                }
+            });
+        } else {
+            let oldLinks;
+            try {
+                oldLinks = (<RSS3Index>await utils.storage.read(content.id)).links;
+            } catch (e) {}
+            if (oldLinks) {
+                removeLinks.push(...oldLinks);
+            }
+        }
+        utils.backlinks.add(content.id, addLinks);
+        utils.backlinks.remove(content.id, removeLinks);
     });
 
     ctx.body = contents.map((content) => content.id);
