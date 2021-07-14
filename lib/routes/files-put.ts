@@ -42,6 +42,11 @@ export default async (ctx: Koa.Context) => {
                 }
             }
 
+            // file version check
+            if (config.supported_version.indexOf(content['@version']) === -1) {
+                utils.thorw(STATE.FILE_VERSION_ERROR, ctx);
+            }
+
             // file next check
             if (content.items_next) {
                 const nextIdParsed = utils.id.parse(content.items_next);

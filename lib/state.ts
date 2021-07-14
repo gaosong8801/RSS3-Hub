@@ -8,6 +8,7 @@ export default class STATE {
     static readonly FILE_NEXT_ERROR = 2004;
     static readonly FILE_DATE_ERROR = 2005;
     static readonly FILE_LENGTH_ERROR = 2006;
+    static readonly FILE_VERSION_ERROR = 2007;
 
     static readonly PROFILE_SIG_ERROR = 3001;
 
@@ -29,7 +30,7 @@ export default class STATE {
         2004: 'File items_next error',
         2005: 'File date error',
         2006: 'File value length error',
-        2007: 'File not found',
+        2007: 'File version not supported',
 
         3001: 'Profile signature error',
 

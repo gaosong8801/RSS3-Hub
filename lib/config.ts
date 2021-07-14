@@ -7,6 +7,7 @@ export default {
     maxValueLength: 280,
     maxDateGap: 2 * 60 * 60 * 1000,
     version: 'rss3.io/version/v0.1.1',
+    supported_version: ['rss3.io/version/v0.1.0', 'rss3.io/version/v0.1.1'],
     storage: {
         path: 'storage/',
         spacesName: process.env.SPACES_NAME,
