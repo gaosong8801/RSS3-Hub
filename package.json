@@ -6,11 +6,11 @@
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
         "watch-ts": "ttsc -w",
-        "watch-node": "nodemon dist/lib/index.js",
+        "watch-node": "nodemon dist/index.js",
         "watch": "concurrently -k -p \"[{name}]\" -n \"TypeScript,Node\" -c \"cyan.bold,green.bold\" \"npm run watch-ts\" \"npm run watch-node\"",
         "dev": "npm run watch",
         "build": "ttsc",
-        "deploy": "node dist/lib/index.js",
+        "deploy": "node dist/index.js",
         "prepare": "husky install"
     },
     "lint-staged": {
