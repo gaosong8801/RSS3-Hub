@@ -46,6 +46,9 @@ export default {
             } else {
                 list = await storage.read(listId);
 
+                if (!list.list) {
+                    list.list = [];
+                }
                 if (list.list.length >= config.listPageSize) {
                     const newListId = id.addIndex(list.id, list.list_next);
                     const newContent: RSS3List = {
@@ -78,7 +81,6 @@ export default {
         if (item.upstream) {
             const parsed = id.parse(item.upstream);
             let listId = `${parsed.persona}-context@${parsed.index}@${item.type}`;
-            const now = new Date().toISOString();
 
             if (!(await storage.exist(listId))) {
                 return false;
@@ -89,7 +91,7 @@ export default {
                     list = await storage.read(listId);
                     index = list.list ? list.list.findIndex((i) => i === item.id) : -1;
                     listId = list.list_next;
-                } while (index !== -1 || !listId);
+                } while (index === -1 && listId);
                 if (index === -1) {
                     return false;
                 }
@@ -97,8 +99,9 @@ export default {
                 if (list.list.length === 0) {
                     delete list.list_next;
                 }
-                list.date_updated = now;
+                list.date_updated = new Date().toISOString();
                 storage.write(list);
+                return true;
             }
         }
     },

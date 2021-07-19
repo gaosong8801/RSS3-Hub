@@ -20,13 +20,18 @@ export default {
         }).promise();
     },
     read: async (id: string) => {
-        return new Promise<RSS3Content>(async (resolve) => {
-            const data = await s3
-                .getObject({
-                    Bucket: config.storage.spacesName,
-                    Key: config.storage.path + id,
-                })
-                .promise();
+        return new Promise<RSS3Content>(async (resolve, reject) => {
+            let data;
+            try {
+                data = await s3
+                    .getObject({
+                        Bucket: config.storage.spacesName,
+                        Key: config.storage.path + id,
+                    })
+                    .promise();
+            } catch (error) {
+                reject(error);
+            }
             resolve(JSON.parse(data.Body.toString()));
         });
     },
