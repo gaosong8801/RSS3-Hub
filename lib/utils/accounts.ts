@@ -1,4 +1,5 @@
 import Accounts from 'web3-eth-accounts';
+import compatibility from './compatibility';
 
 function removeNotSignProperties(obj: AnyObject) {
     obj = JSON.parse(JSON.stringify(obj));
@@ -35,6 +36,9 @@ const accounts = new Accounts();
 
 export default {
     check(obj: AnyObject, persona: string) {
+        if (compatibility.check(obj, persona)) {
+            return true;
+        }
         if (!obj.signature) {
             return false;
         } else {
